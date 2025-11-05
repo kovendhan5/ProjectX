@@ -7,6 +7,7 @@ Provide toggleable modules for customization, ensuring no unwanted background pr
 Support open-source contributions for community-driven expansions.
 Enhance user satisfaction by putting them "at ease" through control and efficiency (quick tweaks without system drag).
 Build a portfolio-worthy project for career growth (resume booster for IT roles in DevOps, full-stack, or AI/ML).
+
 Success Metrics:
 
 100+ GitHub stars in the first month.
