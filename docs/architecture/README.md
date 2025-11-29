@@ -1,8 +1,9 @@
 # Architecture Playbook
 
-Placeholder for target-state architecture materials. Capture the following as they become available:
+Use this folder to assemble evolving architectural guidance. Start with the curated references below:
 
-- Context, container, and component diagrams.
-- Smart contract interaction flows.
-- Integration patterns with government, ERP/POS, and analytics platforms.
-- Infrastructure topology and node governance model.
+- `system-context.md`: External actors, trust boundaries, and high-level data exchanges.
+- `component-overview.md`: Logical services, responsibilities, and integration contracts.
+- `data-flow.md`: Narrative sequences for onboarding, custody transfer, billing, reporting, and recalls.
+
+Add container and deployment diagrams, smart contract specifications, and infrastructure topology as designs mature. Keep artifacts versioned alongside design decisions for auditability.
