@@ -47,7 +47,8 @@ scripts/
 ## Documentation
 
 - Product requirements live in `docs/PRD.md`.
-- Architectural plans and diagrams belong in `docs/architecture/`.
+- Architectural plans and diagrams live in `docs/architecture/` (see context, component, and data-flow guides).
+- Release milestones and backlog scaffolding are curated in `docs/roadmap.md`.
 - Service- and portal-specific notes reside in their respective subdirectories.
 
 ## Roadmap Highlights
