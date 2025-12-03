@@ -4,11 +4,11 @@ This document sketches the target-state environments, hosting strategy, and runt
 
 ## Environments
 
-| Environment | Purpose | Key Characteristics |
-|-------------|---------|---------------------|
-| Dev | Rapid iteration for feature branches, mocked integrations | Single-region cluster, permissive feature toggles, ephemeral data |
-| QA / Staging | Integration testing, performance validation, pre-production sign-off | Mirrors production topology, connects to sandbox government APIs |
-| Production | Live consortium operations | Multi-region high availability, hardened security controls, audited change management |
+| Environment  | Purpose                                                              | Key Characteristics                                                                   |
+| ------------ | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Dev          | Rapid iteration for feature branches, mocked integrations            | Single-region cluster, permissive feature toggles, ephemeral data                     |
+| QA / Staging | Integration testing, performance validation, pre-production sign-off | Mirrors production topology, connects to sandbox government APIs                      |
+| Production   | Live consortium operations                                           | Multi-region high availability, hardened security controls, audited change management |
 
 ## Logical Layout
 
