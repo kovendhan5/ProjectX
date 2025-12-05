@@ -62,3 +62,4 @@ scripts/
 - Open an issue describing scope and assumptions before large changes.
 - Keep documentation current with implementation milestones.
 - Follow secure coding, testing, and deployment guidelines defined per service.
+- Review `CONTRIBUTING.md` for branching, testing, and security expectations.
