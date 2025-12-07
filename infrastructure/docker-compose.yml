@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  # Core API Service
+  api:
+    build:
+      context: ../services/api
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://user:password@postgres:5432/projectx
+    depends_on:
+      - postgres
+    volumes:
+      - ../services/api/src:/app/src
+    command: npm run dev
+
+  # Pharmacy Portal Client
+  pharmacy-portal:
+    build:
+      context: ../clients/pharmacy-portal
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ../clients/pharmacy-portal/src:/app/src
+    command: npm run dev
+
+  # Database
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=projectx
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Redis (Cache/Queue)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
