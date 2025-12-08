@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  sku         String   @unique
+  name        String
+  description String?
+  manufacturer String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  batches     Batch[]
+}
+
+model Batch {
+  id             String   @id @default(uuid())
+  batchNumber    String   @unique
+  productId      String
+  product        Product  @relation(fields: [productId], references: [id])
+  manufactureDate DateTime
+  expiryDate     DateTime
+  quantity       Int
+  status         BatchStatus @default(PRODUCED)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+enum BatchStatus {
+  PRODUCED
+  IN_TRANSIT
+  RECEIVED
+  SOLD
+  RECALLED
+  DESTROYED
+}
