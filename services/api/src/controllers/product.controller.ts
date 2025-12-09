@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../config/db';
-import { CreateProductInput, CreateBatchInput } from '../models/product.schema';
+import { CreateBatchInput, CreateProductInput } from '../models/product.schema';
 
 export const createProduct = async (req: Request<{}, {}, CreateProductInput>, res: Response) => {
   try {
@@ -22,7 +22,7 @@ export const createProduct = async (req: Request<{}, {}, CreateProductInput>, re
   }
 };
 
-export const getProducts = async (req: Request, res: Response) => {
+export const getProducts = async (_req: Request, res: Response) => {
   try {
     const products = await prisma.product.findMany({
       include: { batches: true },
