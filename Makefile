@@ -32,3 +32,11 @@ test:
 # Lint code
 lint:
 	npm run lint
+
+# Database Migrations
+migrate:
+	cd services/api && npm run migrate:dev
+
+# Generate Prisma Client
+generate:
+	cd services/api && npm run generate
