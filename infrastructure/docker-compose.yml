@@ -18,6 +18,20 @@ services:
       - ../services/api/src:/app/src
     command: npm run dev
 
+  # Blockchain Service (Mock)
+  blockchain:
+    build:
+      context: ../services/blockchain
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+      - NODE_ENV=development
+    volumes:
+      - ../services/blockchain/src:/app/src
+    command: npm run dev
+
   # Pharmacy Portal Client
   pharmacy-portal:
     build:
