@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../config/db';
 import { CreateBatchInput, CreateProductInput } from '../models/product.schema';
+import { recordTransaction } from '../services/blockchain.service';
 
 export const createProduct = async (req: Request<{}, {}, CreateProductInput>, res: Response) => {
   try {
@@ -13,6 +14,15 @@ export const createProduct = async (req: Request<{}, {}, CreateProductInput>, re
 
     const product = await prisma.product.create({
       data: { sku, name, description, manufacturer },
+    });
+
+    // Anchor product creation to blockchain
+    await recordTransaction({
+      type: 'PRODUCT_REGISTRATION',
+      productId: product.id,
+      sku: product.sku,
+      manufacturer: product.manufacturer,
+      timestamp: new Date().toISOString()
     });
 
     return res.status(201).json(product);
@@ -51,6 +61,17 @@ export const createBatch = async (req: Request<{}, {}, CreateBatchInput>, res: R
         expiryDate: new Date(expiryDate),
         quantity,
       },
+    });
+
+    // Anchor batch creation to blockchain
+    await recordTransaction({
+      type: 'BATCH_CREATION',
+      batchId: batch.id,
+      batchNumber: batch.batchNumber,
+      productId: batch.productId,
+      quantity: batch.quantity,
+      expiryDate: batch.expiryDate,
+      timestamp: new Date().toISOString()
     });
 
     return res.status(201).json(batch);
