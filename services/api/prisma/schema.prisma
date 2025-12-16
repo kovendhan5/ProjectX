@@ -29,6 +29,7 @@ model Batch {
   status         BatchStatus @default(PRODUCED)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  invoiceItems   InvoiceItem[]
 }
 
 enum BatchStatus {
@@ -38,4 +39,23 @@ enum BatchStatus {
   SOLD
   RECALLED
   DESTROYED
+}
+
+model Invoice {
+  id            String        @id @default(uuid())
+  invoiceNumber String        @unique
+  customerName  String?
+  totalAmount   Float
+  createdAt     DateTime      @default(now())
+  items         InvoiceItem[]
+}
+
+model InvoiceItem {
+  id        String  @id @default(uuid())
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  batchId   String
+  batch     Batch   @relation(fields: [batchId], references: [id])
+  quantity  Int
+  price     Float
 }

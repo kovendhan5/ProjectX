@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import productRoutes from './routes/product.routes';
+import invoiceRoutes from './routes/invoice.routes';
 
 const app: Express = express();
 
