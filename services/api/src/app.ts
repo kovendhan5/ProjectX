@@ -3,8 +3,8 @@ import express, { Express, Request, Response } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import productRoutes from './routes/product.routes';
 import invoiceRoutes from './routes/invoice.routes';
+import productRoutes from './routes/product.routes';
 
 const app: Express = express();
 
@@ -21,5 +21,6 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // API Routes
 app.use('/api/v1', productRoutes);
+app.use('/api/v1', invoiceRoutes);
 
 export default app;
