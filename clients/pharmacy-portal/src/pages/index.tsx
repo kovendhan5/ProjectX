@@ -19,9 +19,9 @@ export default function Home() {
           <a href="/scan" className="p-4 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition font-semibold block">
             Scan Product
           </a>
-          <button className="p-4 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition font-semibold">
+          <a href="/invoice" className="p-4 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition font-semibold block">
             Create Invoice
-          </button>
+          </a>
         </div>
       </main>
     </div>
