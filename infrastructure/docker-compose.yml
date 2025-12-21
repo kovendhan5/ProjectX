@@ -45,6 +45,19 @@ services:
       - ../clients/pharmacy-portal/src:/app/src
     command: npm run dev
 
+  # Regulator Portal Client
+  regulator-portal:
+    build:
+      context: ../clients/regulator-portal
+      dockerfile: Dockerfile
+    ports:
+      - "3004:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ../clients/regulator-portal/src:/app/src
+    command: npm run dev
+
   # Database
   postgres:
     image: postgres:15-alpine
