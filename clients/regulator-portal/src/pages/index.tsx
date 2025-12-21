@@ -1,6 +1,6 @@
-import Head from 'next/head';
 import { Activity, Box, FileText, Search, ShieldCheck } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
 
 export default function RegulatorDashboard() {
   const [stats, setStats] = useState({
