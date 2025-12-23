@@ -39,10 +39,41 @@ scripts/
 
 ## Getting Started
 
-- Define consortium members, regulatory contacts, and governance policies.
-- Stand up development environments for blockchain nodes and API services.
+### Prerequisites
+- Node.js 18+
+- Docker & Docker Compose
+- PostgreSQL (via Docker)
+
+### Quick Start
+
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Start Services**:
+   ```bash
+   cd infrastructure
+   docker-compose up --build
+   ```
+
+3. **Access Portals**:
+   - **API**: http://localhost:3001
+   - **Pharmacy Portal**: http://localhost:3002
+   - **Blockchain Service**: http://localhost:3003
+   - **Regulator Portal**: http://localhost:3004
+
+4. **Database Setup**:
+   ```bash
+   # From services/api directory
+   npx prisma migrate dev
+   npx prisma db seed
+   ```
+
+### Development Workflow
 - Populate sample data sets (products, batches, licenses) to validate flows.
 - Prototype QR scanning experience across pharmacy and consumer touchpoints.
+- Test invoice generation and blockchain anchoring end-to-end.
 
 ## Documentation
 
