@@ -3,7 +3,7 @@ import express, { Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import { healthCheck, getApiInfo } from './controllers/health.controller';
+import { getApiInfo, healthCheck } from './controllers/health.controller';
 import invoiceRoutes from './routes/invoice.routes';
 import productRoutes from './routes/product.routes';
 

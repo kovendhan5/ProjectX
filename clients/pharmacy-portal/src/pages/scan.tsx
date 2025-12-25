@@ -1,6 +1,7 @@
 import { AlertTriangle, Calendar, CheckCircle, Package, Search } from 'lucide-react';
 import Head from 'next/head';
 import React, { useState } from 'react';
+import Layout from '../components/Layout';
 
 interface Batch {
   id: string;
@@ -54,7 +55,8 @@ export default function ScanPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <Layout>
+      <div className="min-h-screen bg-gray-50 p-6">
       <Head>
         <title>Scan Product | Pharmacy Portal</title>
       </Head>
@@ -181,6 +183,7 @@ export default function ScanPage() {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </Layout>
   );
 }
