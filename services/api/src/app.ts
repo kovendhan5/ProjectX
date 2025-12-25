@@ -1,8 +1,9 @@
 import cors from 'cors';
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
+import { healthCheck, getApiInfo } from './controllers/health.controller';
 import invoiceRoutes from './routes/invoice.routes';
 import productRoutes from './routes/product.routes';
 
@@ -14,10 +15,9 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
-// Health Check
-app.get('/health', (_req: Request, res: Response) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
-});
+// Root & Health Check
+app.get('/', getApiInfo);
+app.get('/health', healthCheck);
 
 // API Routes
 app.use('/api/v1', productRoutes);

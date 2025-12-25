@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { Package } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -8,9 +9,12 @@ export default function Home() {
       </Head>
       
       <main className="max-w-2xl w-full bg-white rounded-xl shadow-lg p-8 text-center">
-        <h1 className="text-4xl font-bold text-blue-600 mb-4">
-          Pharmacy Portal
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <Package className="w-10 h-10 text-blue-600" />
+          <h1 className="text-4xl font-bold text-blue-600">
+            Pharmacy Portal
+          </h1>
+        </div>
         <p className="text-gray-600 mb-8">
           Secure billing and provenance verification for trusted pharmacies.
         </p>
