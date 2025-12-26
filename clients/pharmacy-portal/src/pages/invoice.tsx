@@ -1,6 +1,7 @@
 import { CheckCircle, FileText, Plus, Search, ShoppingCart, Trash2 } from 'lucide-react';
 import Head from 'next/head';
 import React, { useState } from 'react';
+import Layout from '../components/Layout';
 
 interface Batch {
   id: string;
@@ -134,7 +135,8 @@ export default function InvoicePage() {
 
   if (successId) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <Layout>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-xl shadow-lg text-center max-w-md w-full">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-8 h-8 text-green-600" />
@@ -150,12 +152,14 @@ export default function InvoicePage() {
             Create Another
           </button>
         </div>
-      </div>
+        </div>
+      </Layout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <Layout>
+      <div className="min-h-screen bg-gray-50 p-6">
       <Head>
         <title>Create Invoice | Pharmacy Portal</title>
       </Head>
@@ -295,6 +299,7 @@ export default function InvoicePage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </Layout>
   );
 }

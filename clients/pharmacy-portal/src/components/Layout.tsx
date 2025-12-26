@@ -1,6 +1,6 @@
+import { Home, Package } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import { Package, Home } from 'lucide-react';
 
 interface LayoutProps {
   children: ReactNode;
