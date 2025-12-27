@@ -34,6 +34,14 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
+# Next.js
+.next/
+out/
+
+# Prisma
+*.db
+*.db-journal
+
 # Terraform
 .terraform/
 *.tfstate
