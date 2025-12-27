@@ -1,0 +1,104 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Lint code
+        run: npm run lint
+      
+      - name: Run tests
+        run: npm run test
+      
+      - name: Build all services
+        run: npm run build
+
+  database-tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: projectx_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Run migrations
+        working-directory: ./services/api
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/projectx_test
+        run: |
+          npx prisma migrate deploy
+          npx prisma generate
+      
+      - name: Test database integration
+        working-directory: ./services/api
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/projectx_test
+        run: npm test
+
+  docker-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Build API Docker image
+        working-directory: ./services/api
+        run: docker build -t projectx-api:test .
+      
+      - name: Build Blockchain Docker image
+        working-directory: ./services/blockchain
+        run: docker build -t projectx-blockchain:test .
+      
+      - name: Build Pharmacy Portal Docker image
+        working-directory: ./clients/pharmacy-portal
+        run: docker build -t projectx-pharmacy-portal:test .
+      
+      - name: Build Regulator Portal Docker image
+        working-directory: ./clients/regulator-portal
+        run: docker build -t projectx-regulator-portal:test .

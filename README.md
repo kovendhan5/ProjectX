@@ -77,9 +77,11 @@ scripts/
 
 ## Documentation
 
-- Product requirements live in `docs/PRD.md`.
-- Architectural plans and diagrams live in `docs/architecture/` (see context, component, and data-flow guides).
-- Release milestones and backlog scaffolding are curated in `docs/roadmap.md`.
+- Product requirements live in [docs/PRD.md](docs/PRD.md).
+- Architectural plans and diagrams live in [docs/architecture/](docs/architecture/) (see context, component, and data-flow guides).
+- Release milestones and backlog scaffolding are curated in [docs/roadmap.md](docs/roadmap.md).
+- Testing guide in [docs/TESTING.md](docs/TESTING.md).
+- Security policy in [SECURITY.md](SECURITY.md).
 - Service- and portal-specific notes reside in their respective subdirectories.
 
 ## Roadmap Highlights
@@ -93,4 +95,23 @@ scripts/
 - Open an issue describing scope and assumptions before large changes.
 - Keep documentation current with implementation milestones.
 - Follow secure coding, testing, and deployment guidelines defined per service.
-- Review `CONTRIBUTING.md` for branching, testing, and security expectations.
+- Review [CONTRIBUTING.md](CONTRIBUTING.md) for branching, testing, and security expectations.
+
+## Quick Commands
+
+```bash
+# First-time setup
+make setup
+
+# Start all services
+make dev
+
+# Run tests
+make test
+
+# Database operations
+make migrate
+make seed
+```
+
+For detailed instructions, see [QUICKSTART.md](QUICKSTART.md).

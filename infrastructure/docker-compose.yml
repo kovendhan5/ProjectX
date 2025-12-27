@@ -13,10 +13,17 @@ services:
       - NODE_ENV=development
       - DATABASE_URL=postgres://user:password@postgres:5432/projectx
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     volumes:
       - ../services/api/src:/app/src
     command: npm run dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # Blockchain Service (Mock)
   blockchain:
@@ -31,6 +38,12 @@ services:
     volumes:
       - ../services/blockchain/src:/app/src
     command: npm run dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # Pharmacy Portal Client
   pharmacy-portal:
@@ -69,6 +82,12 @@ services:
       - POSTGRES_DB=projectx
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d projectx"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   # Redis (Cache/Queue)
   redis:
