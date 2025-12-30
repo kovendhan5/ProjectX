@@ -1,5 +1,5 @@
+import React, { Component, ReactNode } from 'react';
 import { AlertTriangle } from 'lucide-react';
-import { Component, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -45,7 +45,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             )}
             <button
               onClick={() => window.location.reload()}
-              className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
+              className="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700"
             >
               Refresh Page
             </button>
