@@ -77,12 +77,15 @@ scripts/
 
 ## Documentation
 
-- Product requirements live in [docs/PRD.md](docs/PRD.md).
-- Architectural plans and diagrams live in [docs/architecture/](docs/architecture/) (see context, component, and data-flow guides).
-- Release milestones and backlog scaffolding are curated in [docs/roadmap.md](docs/roadmap.md).
-- Testing guide in [docs/TESTING.md](docs/TESTING.md).
-- Security policy in [SECURITY.md](SECURITY.md).
-- Service- and portal-specific notes reside in their respective subdirectories.
+- **Quick Start**: [QUICKSTART.md](QUICKSTART.md) - Get up and running in minutes
+- **API Reference**: [docs/API.md](docs/API.md) - Complete API documentation
+- **Deployment**: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) - Production deployment guide
+- **Testing**: [docs/TESTING.md](docs/TESTING.md) - Testing strategy and examples
+- **Architecture**: [docs/architecture/](docs/architecture/) - System design and diagrams
+- **Product Requirements**: [docs/PRD.md](docs/PRD.md) - Product specifications
+- **Roadmap**: [docs/roadmap.md](docs/roadmap.md) - Future development plans
+- **Security**: [SECURITY.md](SECURITY.md) - Security policy and best practices
+- **Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
 
 ## Roadmap Highlights
 
