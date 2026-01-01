@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { createProduct, getProductBySku } from './product.controller';
 import prisma from '../config/db';
+import { createProduct, getProductBySku } from './product.controller';
 
 // Mock Prisma client
 jest.mock('../config/db', () => ({
