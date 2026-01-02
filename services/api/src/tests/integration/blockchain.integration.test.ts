@@ -4,8 +4,8 @@
  * Tests blockchain service integration with the API
  */
 
-import request from 'supertest';
 import { PrismaClient } from '@prisma/client';
+import request from 'supertest';
 import app from '../../app';
 import { BlockchainService } from '../../services/blockchain.service';
 
