@@ -64,6 +64,100 @@ REGULATOR_URL=http://localhost:3004
 
 ---
 
+### Database Scripts
+
+#### `backup-db.sh` / `backup-db.bat`
+Creates timestamped database backup.
+
+**Usage**:
+```bash
+# Linux/Mac
+./scripts/backup-db.sh
+
+# Windows
+scripts\backup-db.bat
+```
+
+**Features**:
+- Automatic compression (gzip/7zip)
+- Timestamped filenames
+- Automatic cleanup (keeps 7 days)
+- Docker and local PostgreSQL support
+
+**Backup Location**: `./backups/`
+
+---
+
+#### `restore-db.sh`
+Restores database from backup file.
+
+**Usage**:
+```bash
+./scripts/restore-db.sh backups/projectx_backup_20240101_120000.sql.gz
+```
+
+**⚠️ Warning**: This will overwrite the current database!
+
+**Features**:
+- Automatic decompression
+- Safety confirmation prompt
+- Runs migrations after restore
+
+---
+
+### Testing Scripts
+
+#### `run-tests.sh` / `run-tests.bat`
+Runs complete test suite with coverage.
+
+**Usage**:
+```bash
+# Linux/Mac
+./scripts/run-tests.sh
+
+# Windows
+scripts\run-tests.bat
+```
+
+**What it tests**:
+- API Service (unit + integration)
+- Blockchain Service
+- Pharmacy Portal
+- Regulator Portal
+
+**Output**:
+- Terminal test results
+- Coverage reports in each service's `coverage/` directory
+- HTML reports for detailed analysis
+
+---
+
+### Validation Scripts
+
+#### `validate-env.sh` / `validate-env.bat`
+Validates environment configuration.
+
+**Usage**:
+```bash
+# Linux/Mac
+./scripts/validate-env.sh
+
+# Windows
+scripts\validate-env.bat
+```
+
+**Checks**:
+- Required environment variables
+- Environment files exist
+- Configuration completeness
+
+**Use before**:
+- Starting development
+- Deployment
+- CI/CD runs
+
+---
+
 ## Creating New Scripts
 
 ### Guidelines
@@ -107,13 +201,11 @@ pause
 
 ## Future Scripts (TODO)
 
-- [ ] `backup-db.sh` - Database backup script
-- [ ] `restore-db.sh` - Database restore script
-- [ ] `deploy.sh` - Automated deployment script
-- [ ] `run-tests.sh` - Run all tests with coverage
 - [ ] `generate-ssl.sh` - Generate self-signed SSL certificates
 - [ ] `update-deps.sh` - Update all dependencies
 - [ ] `check-ports.sh` - Check if required ports are available
+- [ ] `load-test.sh` - Run performance/load tests
+- [ ] `security-scan.sh` - Run security vulnerability scan
 
 ---
 
