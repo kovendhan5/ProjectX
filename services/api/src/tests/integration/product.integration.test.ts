@@ -1,6 +1,6 @@
+import { PrismaClient } from '@prisma/client';
 import request from 'supertest';
 import app from '../app';
-import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
