@@ -12,22 +12,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - API service with Express.js and Prisma ORM
 - Mock blockchain service with SHA256 hashing
 - PostgreSQL database with comprehensive schema
-- Docker Compose orchestration
+- Docker Compose orchestration with health checks
 - CI/CD pipeline with GitHub Actions
-- Comprehensive documentation suite
+- Comprehensive documentation suite (17+ files)
+- Development automation with Makefile
+- Code quality tools (Prettier, ESLint)
+- VS Code workspace configuration
 
 ### Added - Pharmacy Portal
 - Product scanning by SKU
-- Batch information display
+- Batch information display with blockchain verification
 - Invoice creation workflow
 - Shopping cart functionality
 - Navigation layout component
 - Error boundary handling
+- Centralized API configuration
 
 ### Added - Regulator Portal  
 - System dashboard with statistics
 - Transaction log viewer
 - Entity verification tool
+- Error boundary handling
+- Blockchain verification interface
+
+### Added - Operations & Deployment
+- Deployment checklist (DEPLOYMENT_CHECKLIST.md)
+- Operations runbook (RUNBOOK.md)
+- Health check scripts
+- Database backup/restore scripts
+- Environment templates for all services
+- Production Docker Compose configuration
 - Real-time system status display
 
 ### Added - Infrastructure

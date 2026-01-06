@@ -77,15 +77,33 @@ scripts/
 
 ## Documentation
 
+> 📑 **Complete Documentation Index**: [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) - Navigation guide for all 31 documentation files
+
+### Getting Started
 - **Quick Start**: [QUICKSTART.md](QUICKSTART.md) - Get up and running in minutes
+- **Project Summary**: [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) - Comprehensive overview
 - **API Reference**: [docs/API.md](docs/API.md) - Complete API documentation
-- **Deployment**: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) - Production deployment guide
 - **Testing**: [docs/TESTING.md](docs/TESTING.md) - Testing strategy and examples
+
+### Architecture & Design
 - **Architecture**: [docs/architecture/](docs/architecture/) - System design and diagrams
 - **Product Requirements**: [docs/PRD.md](docs/PRD.md) - Product specifications
 - **Roadmap**: [docs/roadmap.md](docs/roadmap.md) - Future development plans
+
+### Operations & Deployment
+- **Deployment Guide**: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) - Production deployment guide
+- **Deployment Checklist**: [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) - Pre-deployment verification
+- **Operations Runbook**: [RUNBOOK.md](RUNBOOK.md) - Maintenance and troubleshooting procedures
 - **Security**: [SECURITY.md](SECURITY.md) - Security policy and best practices
-- **Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
+
+### Status & Metrics
+- **Status Report**: [STATUS_REPORT.md](STATUS_REPORT.md) - Complete system status
+- **Metrics Dashboard**: [METRICS.md](METRICS.md) - Project metrics and KPIs
+- **Changelog**: [CHANGELOG.md](CHANGELOG.md) - Release history
+
+### Contributing
+- **Contributing Guidelines**: [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
+- **Developer TODO**: [TODO.md](TODO.md) - Planned features and enhancements
 
 ## Roadmap Highlights
 
