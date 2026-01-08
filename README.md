@@ -99,6 +99,7 @@ scripts/
 
 ### Operations & Deployment
 - **Deployment Guide**: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) - Production deployment guide
+- **Monitoring Guide**: [docs/MONITORING.md](docs/MONITORING.md) - Prometheus, Grafana, and observability setup
 - **Deployment Checklist**: [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) - Pre-deployment verification
 - **Operations Runbook**: [RUNBOOK.md](RUNBOOK.md) - Maintenance and troubleshooting procedures
 - **Security**: [SECURITY.md](SECURITY.md) - Security policy and best practices
