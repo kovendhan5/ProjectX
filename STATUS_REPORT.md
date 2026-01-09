@@ -188,9 +188,8 @@ ProjectX has reached **MVP completion** with a comprehensive pharmaceutical supp
 | docs/API.md | API reference | 850+ | ✅ |
 | docs/DEPLOYMENT.md | Deployment guide | 820 | ✅ |
 | docs/TESTING.md | Testing strategy | 615 | ✅ |
-| docs/MONITORING.md | Monitoring guide | 650 | ✅ NEW |
-| DEPLOYMENT_CHECKLIST.md | Pre-deployment checklist | 470 | ✅ |
-| RUNBOOK.md | Operations procedures | 640 | ✅ |
+| DEPLOYMENT_CHECKLIST.md | Pre-deployment checklist | 470 | ✅ NEW |
+| RUNBOOK.md | Operations procedures | 640 | ✅ NEW |
 
 ### Architecture Documentation
 

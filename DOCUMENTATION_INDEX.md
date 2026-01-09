@@ -32,7 +32,8 @@ New to the project? Start with these documents in order:
 | Document | Purpose | When to Read |
 |----------|---------|--------------|
 | [docs/API.md](docs/API.md) | Complete API reference | Integrating with API |
-| [docs/TESTING.md](docs/TESTING.md) | Testing strategy | Writing tests || [docs/MONITORING.md](docs/MONITORING.md) | Monitoring & observability | Setting up production monitoring || [SECURITY.md](SECURITY.md) | Security guidelines | Before security work |
+| [docs/TESTING.md](docs/TESTING.md) | Testing strategy | Writing tests |
+| [SECURITY.md](SECURITY.md) | Security guidelines | Before security work |
 
 ### Architecture Documentation
 
