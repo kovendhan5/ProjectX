@@ -1,0 +1,22 @@
+[35m.vscode/settings.json[m[36m:[m[32m17[m[36m:[m    "**/.[1;31mgit[m": true,
+[35mCHANGELOG.md[m[36m:[m[32m160[m[36m:[mSee the [Contributors](https://[1;31mgit[mhub.com/yourorg/projectx/graphs/contributors) page for a full list.
+[35mDEPLOYMENT_CHECKLIST.md[m[36m:[m[32m186[m[36m:[m[1;31mgit[m pull origin main
+[35mDEPLOYMENT_CHECKLIST.md[m[36m:[m[32m249[m[36m:[m[1;31mgit[m checkout <previous-commit-hash>
+[35mPRD.md[m[36m:[m[32m31[m[36m:[m- **Consumers / Patients:** Scan invoice QR to validate purchase le[1;31mgit[mimacy and view product advisories.
+[35mPRD.md[m[36m:[m[32m40[m[36m:[m- **Vijay (Consumer):** Scans invoice QR to confirm le[1;31mgit[mimacy and review warnings (e.g., pediatric contraindications).
+[35mPRD.md[m[36m:[m[32m57[m[36m:[m- QR codes follow secure format (encrypted payload + di[1;31mgit[mal signature) to resist tampering.
+[35mPRD.md[m[36m:[m[32m72[m[36m:[m  - Anchoring of critical data (hashes of full records, di[1;31mgit[mal signatures) with off-chain storage for bulky documents.
+[35mPROJECT_SUMMARY.md[m[36m:[m[32m211[m[36m:[m├── .[1;31mgit[mhub/workflows/           # CI/CD
+[35mPROJECT_SUMMARY.md[m[36m:[m[32m223[m[36m:[m└── .[1;31mgit[mignore                  # Git ignore rules
+[35mPROJECT_SUMMARY.md[m[36m:[m[32m234[m[36m:[m[1;31mgit[m clone <repo-url>
+[35mRUNBOOK.md[m[36m:[m[32m530[m[36m:[m[1;31mgit[m checkout <previous-stable-tag>
+[35mSECURITY.md[m[36m:[m[32m37[m[36m:[m   - Use `.env` files ([1;31mgit[mignored)
+[35mSTATUS_REPORT.md[m[36m:[m[32m259[m[36m:[m- ✅ .[1;31mgit[mignore for secrets
+[35mdocs/DEPLOYMENT.md[m[36m:[m[32m232[m[36m:[mThe project includes `.[1;31mgit[mhub/workflows/ci.yml` for:
+[35mdocs/DEPLOYMENT.md[m[36m:[m[32m245[m[36m:[m  if: [1;31mgit[mhub.ref == 'refs/heads/main'
+[35mdocs/PRD.md[m[36m:[m[32m31[m[36m:[m- **Consumers / Patients:** Scan invoice QR to validate purchase le[1;31mgit[mimacy and view product advisories.
+[35mdocs/PRD.md[m[36m:[m[32m40[m[36m:[m- **Vijay (Consumer):** Scans invoice QR to confirm le[1;31mgit[mimacy and review warnings (e.g., pediatric contraindications).
+[35mdocs/PRD.md[m[36m:[m[32m57[m[36m:[m- QR codes follow secure format (encrypted payload + di[1;31mgit[mal signature) to resist tampering.
+[35mdocs/PRD.md[m[36m:[m[32m72[m[36m:[m  - Anchoring of critical data (hashes of full records, di[1;31mgit[mal signatures) with off-chain storage for bulky documents.
+[35mdocs/TESTING.md[m[36m:[m[32m158[m[36m:[mSee `.[1;31mgit[mhub/workflows/ci.yml` for CI configuration.
+[35mdocs/architecture/data-flow.md[m[36m:[m[32m30[m[36m:[m1. Compliance Gateway batches or streams transactions to government API with mutual TLS and di[1;31mgit[mal signatures.
