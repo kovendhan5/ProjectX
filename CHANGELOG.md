@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Winston logger integration for production-grade logging
+- Comprehensive unit tests for Invoice controller
+- Comprehensive unit tests for Batch controller
+- Structured logging with log levels and file rotation
+- Graceful shutdown handlers (SIGTERM, SIGINT)
+
+### Changed
+- Replaced console.log with Winston logger throughout API service
+- Enhanced error logging with request context
+- Improved HTTP request logging via Morgan + Winston
+
+### Fixed
+- TypeScript compilation errors in test files
+- Missing @types/supertest and @types/jest dependencies
+
+---
+
 ## [1.0.0] - 2026-01-05
 
 ### Added - Core Platform
