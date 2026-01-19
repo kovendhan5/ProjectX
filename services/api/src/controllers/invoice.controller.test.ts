@@ -2,13 +2,13 @@
  * Unit tests for Invoice Controller
  */
 
-import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { createInvoice, getInvoiceById, getInvoices } from './invoice.controller';
 
-// Mock Prisma Client
-jest.mock('@prisma/client', () => {
-  const mockPrismaClient = {
+// Mock the database and blockchain service
+jest.mock('../config/db', () => ({
+  __esModule: true,
+  default: {
     invoice: {
       create: jest.fn(),
       findMany: jest.fn(),
@@ -18,13 +18,15 @@ jest.mock('@prisma/client', () => {
       findUnique: jest.fn(),
       update: jest.fn(),
     },
-  };
-  return {
-    PrismaClient: jest.fn(() => mockPrismaClient),
-  };
-});
+    $transaction: jest.fn(),
+  },
+}));
 
-const prisma = new PrismaClient();
+jest.mock('../services/blockchain.service', () => ({
+  recordTransaction: jest.fn(),
+}));
+
+import prisma from '../config/db';
 
 describe('Invoice Controller', () => {
   let mockRequest: Partial<Request>;
@@ -47,11 +49,12 @@ describe('Invoice Controller', () => {
   describe('createInvoice', () => {
     it('should create an invoice successfully', async () => {
       const invoiceData = {
-        customerEmail: 'customer@example.com',
+        customerName: 'John Doe',
         items: [
           {
-            batchNumber: 'BATCH001',
+            batchId: 1,
             quantity: 10,
+            price: 50.0,
           },
         ],
       };
@@ -60,30 +63,38 @@ describe('Invoice Controller', () => {
         id: 1,
         batchNumber: 'BATCH001',
         quantity: 100,
-        productId: 1,
-        unitPrice: 50.0,
       };
 
       const mockCreatedInvoice = {
         id: 1,
-        invoiceNumber: 'INV-001',
-        customerEmail: 'customer@example.com',
+        invoiceNumber: 'INV-123456789',
+        customerName: 'John Doe',
         totalAmount: 500,
-        blockchainHash: 'abc123',
         createdAt: new Date(),
         items: [
           {
             id: 1,
             batchId: 1,
             quantity: 10,
-            unitPrice: 50.0,
-            subtotal: 500,
+            price: 50.0,
           },
         ],
       };
 
-      (prisma.batch.findUnique as jest.Mock).mockResolvedValue(mockBatch);
-      (prisma.invoice.create as jest.Mock).mockResolvedValue(mockCreatedInvoice);
+      // Mock $transaction to execute the callback
+      (prisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+        return callback({
+          batch: {
+            findUnique: jest.fn().mockResolvedValue(mockBatch),
+            update: jest.fn().mockResolvedValue({ ...mockBatch, quantity: 90 }),
+          },
+          invoice: {
+            create: jest.fn().mockResolvedValue(mockCreatedInvoice),
+          },
+        });
+      });
+
+      (recordTransaction as jest.Mock).mockResolvedValue(undefined);
 
       mockRequest.body = invoiceData;
 
@@ -92,25 +103,84 @@ describe('Invoice Controller', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          invoiceNumber: 'INV-001',
-          customerEmail: 'customer@example.com',
+          invoiceNumber: expect.any(String),
+          customerName: 'John Doe',
           totalAmount: 500,
         })
       );
+      expect(recordTransaction).toHaveBeenCalled();
     });
 
-    it('should return 400 if items array is empty', async () => {
+    it('should return 400 if batch not found', async () => {
       mockRequest.body = {
-        customerEmail: 'customer@example.com',
-        items: [],
+        customerName: 'John Doe',
+        items: [
+          {
+            batchId: 999,
+            quantity: 10,
+            price: 50.0,
+          },
+        ],
       };
+
+      (prisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+        return callback({
+          batch: {
+            findUnique: jest.fn().mockResolvedValue(null),
+            update: jest.fn(),
+          },
+          invoice: {
+            create: jest.fn(),
+          },
+        });
+      });
 
       await createInvoice(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          error: expect.stringContaining('at least one item'),
+          error: expect.stringContaining('not found'),
+        })
+      );
+    });
+
+    it('should return 400 if insufficient quantity', async () => {
+      const mockBatch = {
+        id: 1,
+        batchNumber: 'BATCH001',
+        quantity: 5,
+      };
+
+      mockRequest.body = {
+        customerName: 'John Doe',
+        items: [
+          {
+            batchId: 1,
+            quantity: 10,
+            price: 50.0,
+          },
+        ],
+      };
+
+      (prisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
+        return callback({
+          batch: {
+            findUnique: jest.fn().mockResolvedValue(mockBatch),
+            update: jest.fn(),
+          },
+          invoice: {
+            create: jest.fn(),
+          },
+        });
+      });
+
+      await createInvoice(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: expect.stringContaining('Insufficient'),
         })
       );
     });
@@ -122,16 +192,18 @@ describe('Invoice Controller', () => {
         {
           id: 1,
           invoiceNumber: 'INV-001',
-          customerEmail: 'customer1@example.com',
+          customerName: 'John Doe',
           totalAmount: 500,
           createdAt: new Date(),
+          items: [],
         },
         {
           id: 2,
           invoiceNumber: 'INV-002',
-          customerEmail: 'customer2@example.com',
+          customerName: 'Jane Smith',
           totalAmount: 750,
           createdAt: new Date(),
+          items: [],
         },
       ];
 
@@ -140,7 +212,31 @@ describe('Invoice Controller', () => {
       await getInvoices(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockResponse.json).toHaveBeenCalledWith(mockInvoices);
-      expect(prisma.invoice.findMany).toHaveBeenCalled();
+      expect(prisma.invoice.findMany).toHaveBeenCalledWith({
+        include: {
+          items: {
+            include: {
+              batch: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    });
+
+    it('should handle errors when fetching invoices', async () => {
+      (prisma.invoice.findMany as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+      await getInvoices(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: 'Internal Server Error',
+        })
+      );
     });
   });
 
@@ -149,16 +245,18 @@ describe('Invoice Controller', () => {
       const mockInvoice = {
         id: 1,
         invoiceNumber: 'INV-001',
-        customerEmail: 'customer@example.com',
+        customerName: 'John Doe',
         totalAmount: 500,
         createdAt: new Date(),
         items: [
           {
             id: 1,
-            batchNumber: 'BATCH001',
+            batchId: 1,
             quantity: 10,
-            unitPrice: 50.0,
-            subtotal: 500,
+            price: 50.0,
+            batch: {
+              batchNumber: 'BATCH001',
+            },
           },
         ],
       };
@@ -171,7 +269,13 @@ describe('Invoice Controller', () => {
       expect(mockResponse.json).toHaveBeenCalledWith(mockInvoice);
       expect(prisma.invoice.findUnique).toHaveBeenCalledWith({
         where: { id: 1 },
-        include: { items: expect.any(Object) },
+        include: {
+          items: {
+            include: {
+              batch: true,
+            },
+          },
+        },
       });
     });
 
@@ -185,6 +289,33 @@ describe('Invoice Controller', () => {
       expect(mockResponse.json).toHaveBeenCalledWith(
         expect.objectContaining({
           error: expect.stringContaining('not found'),
+        })
+      );
+    });
+
+    it('should return 400 for invalid ID', async () => {
+      mockRequest.params = { id: 'invalid' };
+
+      await getInvoiceById(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: 'Invalid invoice ID',
+        })
+      );
+    });
+
+    it('should handle errors when fetching invoice', async () => {
+      (prisma.invoice.findUnique as jest.Mock).mockRejectedValue(new Error('Database error'));
+      mockRequest.params = { id: '1' };
+
+      await getInvoiceById(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: 'Internal Server Error',
         })
       );
     });
