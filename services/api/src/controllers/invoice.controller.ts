@@ -69,3 +69,56 @@ export const createInvoice = async (req: Request<{}, {}, CreateInvoiceInput>, re
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+export const getInvoices = async (req: Request, res: Response) => {
+  try {
+    const invoices = await prisma.invoice.findMany({
+      include: {
+        items: {
+          include: {
+            batch: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    return res.json(invoices);
+  } catch (error: any) {
+    console.error('Error fetching invoices:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export const getInvoiceById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const invoiceId = parseInt(id, 10);
+
+    if (isNaN(invoiceId)) {
+      return res.status(400).json({ error: 'Invalid invoice ID' });
+    }
+
+    const invoice = await prisma.invoice.findUnique({
+      where: { id: invoiceId },
+      include: {
+        items: {
+          include: {
+            batch: true
+          }
+        }
+      }
+    });
+
+    if (!invoice) {
+      return res.status(404).json({ error: 'Invoice not found' });
+    }
+
+    return res.json(invoice);
+  } catch (error: any) {
+    console.error('Error fetching invoice:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
