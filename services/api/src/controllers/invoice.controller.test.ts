@@ -27,6 +27,7 @@ jest.mock('../services/blockchain.service', () => ({
 }));
 
 import prisma from '../config/db';
+import { recordTransaction } from '../services/blockchain.service';
 
 describe('Invoice Controller', () => {
   let mockRequest: Partial<Request>;
