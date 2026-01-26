@@ -3,7 +3,7 @@
  */
 
 import { Request, Response } from 'express';
-import { healthCheck, getApiInfo } from './health.controller';
+import { getApiInfo, healthCheck } from './health.controller';
 
 describe('Health Controller', () => {
   let mockRequest: Partial<Request>;
