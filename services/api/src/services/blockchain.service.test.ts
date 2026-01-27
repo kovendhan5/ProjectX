@@ -135,7 +135,7 @@ describe('Blockchain Service', () => {
     it('should handle verification errors gracefully', async () => {
       const hash = 'invalid-hash';
       const error = new Error('Transaction not found');
-      
+
       mockedAxios.get.mockRejectedValue(error);
 
       const result = await verifyTransaction(hash);
@@ -149,7 +149,7 @@ describe('Blockchain Service', () => {
 
     it('should return null for non-existent transaction', async () => {
       const hash = 'nonexistent';
-      
+
       mockedAxios.get.mockRejectedValue(new Error('404 Not Found'));
 
       const result = await verifyTransaction(hash);

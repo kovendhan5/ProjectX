@@ -2,7 +2,7 @@
  * Unit tests for Validate Resource Middleware
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
 import validate from './validateResource';
 
