@@ -8,37 +8,42 @@ ProjectX implements comprehensive testing across all layers of the application s
 
 ### ✅ Completed Test Suites
 
-| Component | File | Test Cases | Coverage |
-|-----------|------|------------|----------|
-| Invoice Controller | `invoice.controller.test.ts` | 9 | All endpoints |
-| Product Controller | `product.controller.test.ts` | 9 | All endpoints |
-| Health Controller | `health.controller.test.ts` | 8 | All endpoints |
-| Blockchain Service | `blockchain.service.test.ts` | 7 | All methods |
-| Error Handler | `errorHandler.test.ts` | 8 | All scenarios |
-| Validation Middleware | `validateResource.test.ts` | 9 | All cases |
+| Component             | File                         | Test Cases | Coverage      |
+| --------------------- | ---------------------------- | ---------- | ------------- |
+| Invoice Controller    | `invoice.controller.test.ts` | 9          | All endpoints |
+| Product Controller    | `product.controller.test.ts` | 9          | All endpoints |
+| Health Controller     | `health.controller.test.ts`  | 8          | All endpoints |
+| Blockchain Service    | `blockchain.service.test.ts` | 7          | All methods   |
+| Error Handler         | `errorHandler.test.ts`       | 8          | All scenarios |
+| Validation Middleware | `validateResource.test.ts`   | 9          | All cases     |
 
 **Total**: 50 comprehensive unit tests covering all critical functionality
 
 ## Test Types
 
 ### 1. Unit Tests
+
 Test individual functions and components in isolation with mocked dependencies.
 
 **Location**: `*.test.ts` files next to source code
 
 **Controllers Tested**:
+
 - `services/api/src/controllers/invoice.controller.test.ts`
 - `services/api/src/controllers/product.controller.test.ts`
 - `services/api/src/controllers/health.controller.test.ts`
 
 **Services Tested**:
+
 - `services/api/src/services/blockchain.service.test.ts`
 
 **Middleware Tested**:
+
 - `services/api/src/middleware/errorHandler.test.ts`
 - `services/api/src/middleware/validateResource.test.ts`
 
 **Example**:
+
 ```typescript
 // services/api/src/services/blockchain.service.test.ts
 import { recordTransaction } from './blockchain.service';
@@ -52,9 +57,11 @@ describe('BlockchainService', () => {
 ```
 
 ### 2. Integration Tests
+
 Test interactions between components and external services.
 
 **Example**: Testing API endpoints with database
+
 ```typescript
 // services/api/src/controllers/product.controller.test.ts
 describe('Product Controller', () => {
@@ -63,23 +70,23 @@ describe('Product Controller', () => {
   });
 
   it('should create a product', async () => {
-    const response = await request(app)
-      .post('/api/v1/products')
-      .send({
-        sku: 'TEST-001',
-        name: 'Test Product',
-        manufacturer: 'Test Corp'
-      });
-    
+    const response = await request(app).post('/api/v1/products').send({
+      sku: 'TEST-001',
+      name: 'Test Product',
+      manufacturer: 'Test Corp',
+    });
+
     expect(response.status).toBe(201);
   });
 });
 ```
 
 ### 3. End-to-End Tests
+
 Test complete user workflows across services.
 
 **Example**: Invoice creation workflow
+
 ```typescript
 describe('Invoice Workflow', () => {
   it('should create invoice and update inventory', async () => {
@@ -95,22 +102,26 @@ describe('Invoice Workflow', () => {
 ## Running Tests
 
 ### All Tests
+
 ```bash
 npm test
 ```
 
 ### Specific Service
+
 ```bash
 cd services/api
 npm test
 ```
 
 ### Watch Mode
+
 ```bash
 npm test -- --watch
 ```
 
 ### With Coverage
+
 ```bash
 npm test -- --coverage
 ```
@@ -132,6 +143,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/projectx_test
 ```
 
 Run migrations for test DB:
+
 ```bash
 DATABASE_URL=postgresql://user:password@localhost:5432/projectx_test npx prisma migrate deploy
 ```
@@ -141,19 +153,21 @@ DATABASE_URL=postgresql://user:password@localhost:5432/projectx_test npx prisma 
 ### Best Practices
 
 1. **Descriptive Names**
+
    ```typescript
-   it('should return 400 when SKU is missing')
+   it('should return 400 when SKU is missing');
    ```
 
 2. **Arrange-Act-Assert Pattern**
+
    ```typescript
    it('should create invoice', async () => {
      // Arrange
      const invoiceData = { ... };
-     
+
      // Act
      const result = await createInvoice(invoiceData);
-     
+
      // Assert
      expect(result.invoiceNumber).toBeDefined();
    });
@@ -164,6 +178,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/projectx_test npx prisma 
    - Keep tests focused and simple
 
 4. **Mock External Dependencies**
+
    ```typescript
    jest.mock('./blockchain.service');
    ```
@@ -178,6 +193,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/projectx_test npx prisma 
 ## Continuous Integration
 
 Tests run automatically on:
+
 - Every push to main/develop
 - Every pull request
 - Pre-commit hooks (optional)
@@ -218,16 +234,19 @@ curl http://localhost:3001/api/v1/products/TEST-001
 ## Troubleshooting
 
 ### Tests Fail Locally But Pass in CI
+
 - Check Node.js version matches
 - Ensure database migrations are applied
 - Clear node_modules and reinstall
 
 ### Database Connection Issues
+
 - Verify PostgreSQL is running
 - Check DATABASE_URL in .env.test
 - Ensure test database exists
 
 ### Timeout Errors
+
 - Increase Jest timeout: `jest.setTimeout(10000)`
 - Check for hanging promises
 - Verify mocks are properly configured
