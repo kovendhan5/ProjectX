@@ -2,45 +2,15 @@
 
 ## Overview
 
-ProjectX implements comprehensive testing across all layers of the application stack. The test suite includes unit tests for controllers, services, and middleware, ensuring reliability and maintainability.
-
-## Test Coverage Summary
-
-### ✅ Completed Test Suites
-
-| Component             | File                         | Test Cases | Coverage      |
-| --------------------- | ---------------------------- | ---------- | ------------- |
-| Invoice Controller    | `invoice.controller.test.ts` | 9          | All endpoints |
-| Product Controller    | `product.controller.test.ts` | 9          | All endpoints |
-| Health Controller     | `health.controller.test.ts`  | 8          | All endpoints |
-| Blockchain Service    | `blockchain.service.test.ts` | 7          | All methods   |
-| Error Handler         | `errorHandler.test.ts`       | 8          | All scenarios |
-| Validation Middleware | `validateResource.test.ts`   | 9          | All cases     |
-
-**Total**: 50 comprehensive unit tests covering all critical functionality
+ProjectX uses a multi-layered testing strategy to ensure reliability and correctness.
 
 ## Test Types
 
 ### 1. Unit Tests
 
-Test individual functions and components in isolation with mocked dependencies.
+Test individual functions and components in isolation.
 
-**Location**: `*.test.ts` files next to source code
-
-**Controllers Tested**:
-
-- `services/api/src/controllers/invoice.controller.test.ts`
-- `services/api/src/controllers/product.controller.test.ts`
-- `services/api/src/controllers/health.controller.test.ts`
-
-**Services Tested**:
-
-- `services/api/src/services/blockchain.service.test.ts`
-
-**Middleware Tested**:
-
-- `services/api/src/middleware/errorHandler.test.ts`
-- `services/api/src/middleware/validateResource.test.ts`
+**Location**: `*.test.ts` or `*.spec.ts` files next to source code
 
 **Example**:
 

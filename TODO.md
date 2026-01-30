@@ -27,7 +27,7 @@
 - [ ] Authentication & Authorization (JWT/OAuth2)
 - [ ] API Rate Limiting
 - [ ] Redis Caching Layer
-- [x] Comprehensive Unit Tests (Controllers, Services, Middleware)
+- [ ] Comprehensive Unit Tests
 - [ ] Integration Tests
 - [ ] E2E Tests (Playwright/Cypress)
 - [ ] API Documentation (Swagger/OpenAPI)
