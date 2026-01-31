@@ -1,7 +1,6 @@
 # Developer TODO List
 
 ## ✅ Completed (MVP)
-
 - [x] Monorepo Setup (NPM Workspaces)
 - [x] API Scaffolding (Express, TypeScript)
 - [x] Blockchain Service (Mock, SHA256)
@@ -23,7 +22,6 @@
 - [x] Complete Documentation
 
 ## 🚧 Phase 2 Enhancements
-
 - [ ] Authentication & Authorization (JWT/OAuth2)
 - [ ] API Rate Limiting
 - [ ] Redis Caching Layer
@@ -35,7 +33,6 @@
 - [ ] Monitoring Dashboard (Prometheus/Grafana)
 
 ## 📋 Phase 3 Features
-
 - [ ] QR Code Generation & Scanning
 - [ ] Print Invoice Functionality
 - [ ] Multi-user Support with Roles
@@ -46,7 +43,6 @@
 - [ ] Export Reports (PDF/Excel)
 
 ## 🔗 Phase 4 Blockchain
-
 - [ ] Replace Mock Blockchain with Hyperledger Fabric
 - [ ] Smart Contract Development
 - [ ] Consensus Mechanism Implementation
@@ -54,7 +50,6 @@
 - [ ] Blockchain Explorer UI
 
 ## ☁️ Production Deployment
-
 - [ ] Cloud Infrastructure Setup (AWS/Azure/GCP)
 - [ ] Database Migration Scripts
 - [ ] SSL Certificate Configuration
