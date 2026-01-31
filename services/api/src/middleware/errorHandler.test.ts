@@ -2,7 +2,7 @@
  * Unit tests for Error Handler Middleware
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { errorHandler, notFoundHandler } from './errorHandler';
 
 describe('Error Handler Middleware', () => {
