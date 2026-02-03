@@ -1,17 +1,12 @@
 import { Request, Response } from 'express';
 import prisma from '../config/db';
-import { createBatch, createProduct, getProduct, getProducts } from './product.controller';
+import { createProduct, getProductBySku } from './product.controller';
 
 // Mock Prisma client
 jest.mock('../config/db', () => ({
   __esModule: true,
   default: {
     product: {
-      create: jest.fn(),
-      findUnique: jest.fn(),
-      findMany: jest.fn(),
-    },
-    batch: {
       create: jest.fn(),
       findUnique: jest.fn(),
     },
@@ -118,7 +113,7 @@ describe('Product Controller', () => {
 
       (prisma.product.findUnique as jest.Mock).mockResolvedValue(mockProduct);
 
-      await getProduct(mockRequest as Request, mockResponse as Response);
+      await getProductBySku(mockRequest as Request, mockResponse as Response);
 
       expect(prisma.product.findUnique).toHaveBeenCalledWith({
         where: { sku: 'TEST-001' },
@@ -132,153 +127,11 @@ describe('Product Controller', () => {
 
       (prisma.product.findUnique as jest.Mock).mockResolvedValue(null);
 
-      await getProduct(mockRequest as Request, mockResponse as Response);
+      await getProductBySku(mockRequest as Request, mockResponse as Response);
 
       expect(responseStatus).toHaveBeenCalledWith(404);
       expect(responseJson).toHaveBeenCalledWith(
         expect.objectContaining({ error: 'Product not found' })
-      );
-    });
-  });
-
-  describe('getProducts', () => {
-    it('should return all products with batches', async () => {
-      const mockProducts = [
-        {
-          id: 'uuid-1',
-          sku: 'PROD-001',
-          name: 'Product 1',
-          manufacturer: 'Manufacturer A',
-          batches: [],
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          id: 'uuid-2',
-          sku: 'PROD-002',
-          name: 'Product 2',
-          manufacturer: 'Manufacturer B',
-          batches: [
-            {
-              id: 'batch-1',
-              batchNumber: 'B-001',
-              quantity: 50,
-            },
-          ],
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ];
-
-      (prisma.product.findMany as jest.Mock).mockResolvedValue(mockProducts);
-
-      await getProducts(mockRequest as Request, mockResponse as Response);
-
-      expect(prisma.product.findMany).toHaveBeenCalledWith({
-        include: { batches: true },
-      });
-      expect(responseJson).toHaveBeenCalledWith(mockProducts);
-    });
-
-    it('should handle errors when fetching products', async () => {
-      (prisma.product.findMany as jest.Mock).mockRejectedValue(new Error('Database error'));
-
-      await getProducts(mockRequest as Request, mockResponse as Response);
-
-      expect(responseStatus).toHaveBeenCalledWith(500);
-      expect(responseJson).toHaveBeenCalledWith(
-        expect.objectContaining({ error: expect.any(String) })
-      );
-    });
-  });
-
-  describe('createBatch', () => {
-    it('should create a batch successfully', async () => {
-      const batchData = {
-        batchNumber: 'BATCH-001',
-        productId: 'product-uuid',
-        manufactureDate: '2026-01-01',
-        expiryDate: '2027-01-01',
-        quantity: 100,
-      };
-
-      mockRequest.body = batchData;
-
-      const mockBatch = {
-        id: 'batch-uuid',
-        ...batchData,
-        manufactureDate: new Date(batchData.manufactureDate),
-        expiryDate: new Date(batchData.expiryDate),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-
-      (prisma.batch.findUnique as jest.Mock).mockResolvedValue(null);
-      (prisma.batch.create as jest.Mock).mockResolvedValue(mockBatch);
-
-      await createBatch(mockRequest as Request, mockResponse as Response);
-
-      expect(prisma.batch.findUnique).toHaveBeenCalledWith({
-        where: { batchNumber: batchData.batchNumber },
-      });
-      expect(prisma.batch.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({
-          batchNumber: batchData.batchNumber,
-          quantity: batchData.quantity,
-        }),
-      });
-      expect(responseStatus).toHaveBeenCalledWith(201);
-      expect(responseJson).toHaveBeenCalledWith(mockBatch);
-    });
-
-    it('should return 409 if batch already exists', async () => {
-      const batchData = {
-        batchNumber: 'BATCH-001',
-        productId: 'product-uuid',
-        manufactureDate: '2026-01-01',
-        expiryDate: '2027-01-01',
-        quantity: 100,
-      };
-
-      mockRequest.body = batchData;
-
-      const existingBatch = {
-        id: 'existing-uuid',
-        batchNumber: 'BATCH-001',
-        productId: 'product-uuid',
-      };
-
-      (prisma.batch.findUnique as jest.Mock).mockResolvedValue(existingBatch);
-
-      await createBatch(mockRequest as Request, mockResponse as Response);
-
-      expect(responseStatus).toHaveBeenCalledWith(409);
-      expect(responseJson).toHaveBeenCalledWith(
-        expect.objectContaining({
-          error: 'Batch with this number already exists',
-        })
-      );
-    });
-
-    it('should handle errors when creating batch', async () => {
-      const batchData = {
-        batchNumber: 'BATCH-001',
-        productId: 'product-uuid',
-        manufactureDate: '2026-01-01',
-        expiryDate: '2027-01-01',
-        quantity: 100,
-      };
-
-      mockRequest.body = batchData;
-
-      (prisma.batch.findUnique as jest.Mock).mockResolvedValue(null);
-      (prisma.batch.create as jest.Mock).mockRejectedValue(new Error('Database error'));
-
-      await createBatch(mockRequest as Request, mockResponse as Response);
-
-      expect(responseStatus).toHaveBeenCalledWith(500);
-      expect(responseJson).toHaveBeenCalledWith(
-        expect.objectContaining({ error: expect.any(String) })
       );
     });
   });
