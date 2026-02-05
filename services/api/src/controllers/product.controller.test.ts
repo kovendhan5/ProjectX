@@ -27,13 +27,13 @@ describe('Product Controller', () => {
   beforeEach(() => {
     responseJson = jest.fn();
     responseStatus = jest.fn().mockReturnValue({ json: responseJson });
-
+    
     mockRequest = {};
     mockResponse = {
       status: responseStatus,
       json: responseJson,
     };
-
+    
     jest.clearAllMocks();
   });
 
@@ -68,11 +68,9 @@ describe('Product Controller', () => {
         }),
       });
       expect(responseStatus).toHaveBeenCalledWith(201);
-      expect(responseJson).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sku: productData.sku,
-        })
-      );
+      expect(responseJson).toHaveBeenCalledWith(expect.objectContaining({
+        sku: productData.sku,
+      }));
     });
 
     it('should handle validation errors', async () => {
