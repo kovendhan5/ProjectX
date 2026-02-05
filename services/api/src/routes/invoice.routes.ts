@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createInvoice, getInvoices, getInvoiceById } from '../controllers/invoice.controller';
+import { createInvoice, getInvoiceById, getInvoices } from '../controllers/invoice.controller';
 import validate from '../middleware/validateResource';
 import { createInvoiceSchema } from '../models/invoice.schema';
 
