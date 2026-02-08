@@ -53,7 +53,7 @@ describe('Invoice Controller', () => {
         customerName: 'John Doe',
         items: [
           {
-            batchId: 1,
+            batchId: 'batch-uuid-123',
             quantity: 10,
             price: 50.0,
           },
@@ -61,21 +61,21 @@ describe('Invoice Controller', () => {
       };
 
       const mockBatch = {
-        id: 1,
+        id: 'batch-uuid-123',
         batchNumber: 'BATCH001',
         quantity: 100,
       };
 
       const mockCreatedInvoice = {
-        id: 1,
+        id: 'invoice-uuid-456',
         invoiceNumber: 'INV-123456789',
         customerName: 'John Doe',
         totalAmount: 500,
         createdAt: new Date(),
         items: [
           {
-            id: 1,
-            batchId: 1,
+            id: 'item-uuid-789',
+            batchId: 'batch-uuid-123',
             quantity: 10,
             price: 50.0,
           },
@@ -117,7 +117,7 @@ describe('Invoice Controller', () => {
         customerName: 'John Doe',
         items: [
           {
-            batchId: 999,
+            batchId: 'non-existent-uuid',
             quantity: 10,
             price: 50.0,
           },
@@ -148,7 +148,7 @@ describe('Invoice Controller', () => {
 
     it('should return 400 if insufficient quantity', async () => {
       const mockBatch = {
-        id: 1,
+        id: 'batch-uuid-123',
         batchNumber: 'BATCH001',
         quantity: 5,
       };
@@ -157,7 +157,7 @@ describe('Invoice Controller', () => {
         customerName: 'John Doe',
         items: [
           {
-            batchId: 1,
+            batchId: 'batch-uuid-123',
             quantity: 10,
             price: 50.0,
           },
@@ -191,7 +191,7 @@ describe('Invoice Controller', () => {
     it('should return all invoices', async () => {
       const mockInvoices = [
         {
-          id: 1,
+          id: 'invoice-uuid-1',
           invoiceNumber: 'INV-001',
           customerName: 'John Doe',
           totalAmount: 500,
@@ -199,7 +199,7 @@ describe('Invoice Controller', () => {
           items: [],
         },
         {
-          id: 2,
+          id: 'invoice-uuid-2',
           invoiceNumber: 'INV-002',
           customerName: 'Jane Smith',
           totalAmount: 750,
@@ -244,15 +244,15 @@ describe('Invoice Controller', () => {
   describe('getInvoiceById', () => {
     it('should return invoice by ID', async () => {
       const mockInvoice = {
-        id: 1,
+        id: 'invoice-uuid-1',
         invoiceNumber: 'INV-001',
         customerName: 'John Doe',
         totalAmount: 500,
         createdAt: new Date(),
         items: [
           {
-            id: 1,
-            batchId: 1,
+            id: 'item-uuid-1',
+            batchId: 'batch-uuid-1',
             quantity: 10,
             price: 50.0,
             batch: {
@@ -263,13 +263,13 @@ describe('Invoice Controller', () => {
       };
 
       (prisma.invoice.findUnique as jest.Mock).mockResolvedValue(mockInvoice);
-      mockRequest.params = { id: '1' };
+      mockRequest.params = { id: 'invoice-uuid-1' };
 
       await getInvoiceById(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockResponse.json).toHaveBeenCalledWith(mockInvoice);
       expect(prisma.invoice.findUnique).toHaveBeenCalledWith({
-        where: { id: 1 },
+        where: { id: 'invoice-uuid-1' },
         include: {
           items: {
             include: {
@@ -282,7 +282,7 @@ describe('Invoice Controller', () => {
 
     it('should return 404 if invoice not found', async () => {
       (prisma.invoice.findUnique as jest.Mock).mockResolvedValue(null);
-      mockRequest.params = { id: '999' };
+      mockRequest.params = { id: 'non-existent-uuid' };
 
       await getInvoiceById(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -295,7 +295,7 @@ describe('Invoice Controller', () => {
     });
 
     it('should return 400 for invalid ID', async () => {
-      mockRequest.params = { id: 'invalid' };
+      mockRequest.params = { id: '' };
 
       await getInvoiceById(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -309,7 +309,7 @@ describe('Invoice Controller', () => {
 
     it('should handle errors when fetching invoice', async () => {
       (prisma.invoice.findUnique as jest.Mock).mockRejectedValue(new Error('Database error'));
-      mockRequest.params = { id: '1' };
+      mockRequest.params = { id: 'invoice-uuid-1' };
 
       await getInvoiceById(mockRequest as Request, mockResponse as Response, mockNext);
 
