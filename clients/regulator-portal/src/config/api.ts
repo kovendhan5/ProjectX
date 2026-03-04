@@ -3,9 +3,16 @@ export const BLOCKCHAIN_URL = process.env.NEXT_PUBLIC_BLOCKCHAIN_URL || 'http://
 
 export const API_ENDPOINTS = {
   products: {
+    list: `${API_BASE_URL}/api/v1/products`,
     getBySku: (sku: string) => `${API_BASE_URL}/api/v1/products/${sku}`,
   },
+  invoices: {
+    list: `${API_BASE_URL}/api/v1/invoices`,
+    getById: (id: string) => `${API_BASE_URL}/api/v1/invoices/${id}`,
+  },
   blockchain: {
-    verify: (txId: string) => `${BLOCKCHAIN_URL}/api/blockchain/verify/${txId}`,
+    chain: `${BLOCKCHAIN_URL}/api/v1/chain`,
+    verify: (hash: string) => `${BLOCKCHAIN_URL}/api/v1/verify/${hash}`,
   },
 };
+

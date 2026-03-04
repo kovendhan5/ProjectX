@@ -2,6 +2,7 @@ import { AlertTriangle, Calendar, CheckCircle, Package, Search } from 'lucide-re
 import Head from 'next/head';
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
+import { API_ENDPOINTS } from '../config/api';
 
 interface Batch {
   id: string;
@@ -36,7 +37,7 @@ export default function ScanPage() {
 
     try {
       // In a real app, use an environment variable for the API URL
-      const res = await fetch(`http://localhost:3001/api/v1/products/${sku}`);
+      const res = await fetch(API_ENDPOINTS.products.getBySku(sku));
       
       if (!res.ok) {
         if (res.status === 404) {

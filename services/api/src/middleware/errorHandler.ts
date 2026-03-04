@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import logger from '../config/logger';
 
 export const errorHandler = (
   err: any,
@@ -6,10 +7,13 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.error('Error:', err);
+  logger.error({ err, statusCode: err.statusCode }, 'Unhandled error');
 
   const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
+  const message =
+    process.env.NODE_ENV === 'production' && statusCode === 500
+      ? 'Internal Server Error'
+      : err.message || 'Internal Server Error';
 
   res.status(statusCode).json({
     error: message,
@@ -22,3 +26,4 @@ export const notFoundHandler = (_req: Request, res: Response) => {
     error: 'Route not found',
   });
 };
+

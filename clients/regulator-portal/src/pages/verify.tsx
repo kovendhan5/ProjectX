@@ -2,6 +2,7 @@ import { AlertCircle, ArrowLeft, CheckCircle, Search, Shield, XCircle } from 'lu
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
+import { API_ENDPOINTS } from '../config/api';
 
 interface VerificationResult {
   found: boolean;
@@ -39,7 +40,7 @@ export default function VerifyPage() {
         response = { ok: false, status: 404 };
       } else {
         type = 'product';
-        response = await fetch(`http://localhost:3001/api/v1/products/${query}`);
+        response = await fetch(API_ENDPOINTS.products.getBySku(query));
       }
 
       if (!response.ok) {
@@ -58,7 +59,7 @@ export default function VerifyPage() {
       if (data.blockchainTxId) {
         try {
           const bcResponse = await fetch(
-            `http://localhost:3003/api/blockchain/verify/${data.blockchainTxId}`
+            API_ENDPOINTS.blockchain.verify(data.blockchainTxId)
           );
           if (bcResponse.ok) {
             const bcData = await bcResponse.json();
