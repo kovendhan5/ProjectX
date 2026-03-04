@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../config/db';
+import logger from '../config/logger';
 import { CreateInvoiceInput } from '../models/invoice.schema';
 import { recordTransaction } from '../services/blockchain.service';
 

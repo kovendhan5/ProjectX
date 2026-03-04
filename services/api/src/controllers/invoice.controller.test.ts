@@ -99,7 +99,7 @@ describe('Invoice Controller', () => {
 
       mockRequest.body = invoiceData;
 
-      await createInvoice(mockRequest as Request, mockResponse as Response, mockNext);
+      await createInvoice(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalledWith(
@@ -136,7 +136,7 @@ describe('Invoice Controller', () => {
         });
       });
 
-      await createInvoice(mockRequest as Request, mockResponse as Response, mockNext);
+      await createInvoice(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
@@ -176,7 +176,7 @@ describe('Invoice Controller', () => {
         });
       });
 
-      await createInvoice(mockRequest as Request, mockResponse as Response, mockNext);
+      await createInvoice(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
@@ -210,7 +210,7 @@ describe('Invoice Controller', () => {
 
       (prisma.invoice.findMany as jest.Mock).mockResolvedValue(mockInvoices);
 
-      await getInvoices(mockRequest as Request, mockResponse as Response, mockNext);
+      await getInvoices(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.json).toHaveBeenCalledWith(mockInvoices);
       expect(prisma.invoice.findMany).toHaveBeenCalledWith({
@@ -230,7 +230,7 @@ describe('Invoice Controller', () => {
     it('should handle errors when fetching invoices', async () => {
       (prisma.invoice.findMany as jest.Mock).mockRejectedValue(new Error('Database error'));
 
-      await getInvoices(mockRequest as Request, mockResponse as Response, mockNext);
+      await getInvoices(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(mockResponse.json).toHaveBeenCalledWith(
@@ -265,7 +265,7 @@ describe('Invoice Controller', () => {
       (prisma.invoice.findUnique as jest.Mock).mockResolvedValue(mockInvoice);
       mockRequest.params = { id: 'invoice-uuid-1' };
 
-      await getInvoiceById(mockRequest as Request, mockResponse as Response, mockNext);
+      await getInvoiceById(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.json).toHaveBeenCalledWith(mockInvoice);
       expect(prisma.invoice.findUnique).toHaveBeenCalledWith({
@@ -284,7 +284,7 @@ describe('Invoice Controller', () => {
       (prisma.invoice.findUnique as jest.Mock).mockResolvedValue(null);
       mockRequest.params = { id: 'non-existent-uuid' };
 
-      await getInvoiceById(mockRequest as Request, mockResponse as Response, mockNext);
+      await getInvoiceById(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith(
@@ -297,7 +297,7 @@ describe('Invoice Controller', () => {
     it('should return 400 for invalid ID', async () => {
       mockRequest.params = { id: '' };
 
-      await getInvoiceById(mockRequest as Request, mockResponse as Response, mockNext);
+      await getInvoiceById(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith(
@@ -311,7 +311,7 @@ describe('Invoice Controller', () => {
       (prisma.invoice.findUnique as jest.Mock).mockRejectedValue(new Error('Database error'));
       mockRequest.params = { id: 'invoice-uuid-1' };
 
-      await getInvoiceById(mockRequest as Request, mockResponse as Response, mockNext);
+      await getInvoiceById(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(mockResponse.json).toHaveBeenCalledWith(

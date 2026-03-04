@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../config/db';
-import { createProduct, getProductBySku } from './product.controller';
+import { createProduct } from './product.controller';
 
 // Mock Prisma client
 jest.mock('../config/db', () => ({
@@ -85,7 +85,7 @@ describe('Product Controller', () => {
     });
   });
 
-  describe('getProductBySku', () => {
+  describe('getProduct', () => {
     it('should return product with batches', async () => {
       mockRequest.params = { sku: 'TEST-001' };
 
@@ -111,7 +111,7 @@ describe('Product Controller', () => {
 
       (prisma.product.findUnique as jest.Mock).mockResolvedValue(mockProduct);
 
-      await getProductBySku(mockRequest as Request, mockResponse as Response);
+      await getProduct(mockRequest as Request, mockResponse as Response);
 
       expect(prisma.product.findUnique).toHaveBeenCalledWith({
         where: { sku: 'TEST-001' },
@@ -125,7 +125,7 @@ describe('Product Controller', () => {
 
       (prisma.product.findUnique as jest.Mock).mockResolvedValue(null);
 
-      await getProductBySku(mockRequest as Request, mockResponse as Response);
+      await getProduct(mockRequest as Request, mockResponse as Response);
 
       expect(responseStatus).toHaveBeenCalledWith(404);
       expect(responseJson).toHaveBeenCalledWith(
