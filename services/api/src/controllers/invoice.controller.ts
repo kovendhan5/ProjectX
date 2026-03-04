@@ -12,7 +12,7 @@ export const createInvoice = async (req: Request<{}, {}, CreateInvoiceInput>, re
     const invoiceNumber = `INV-${Date.now()}`; // Simple ID generation
 
     // Database Transaction
-    const invoice = await prisma.$transaction(async (tx) => {
+    const invoice = await prisma.$transaction(async (tx: any) => {
       // 1. Verify and Update Batches
       for (const item of items) {
         const batch = await tx.batch.findUnique({ where: { id: item.batchId } });
@@ -55,13 +55,13 @@ export const createInvoice = async (req: Request<{}, {}, CreateInvoiceInput>, re
       invoiceId: invoice.id,
       invoiceNumber: invoice.invoiceNumber,
       totalAmount: invoice.totalAmount,
-      items: invoice.items.map((i) => ({ batchId: i.batchId, qty: i.quantity })),
+      items: invoice.items.map((i: any) => ({ batchId: i.batchId, qty: i.quantity })),
       timestamp: new Date().toISOString(),
     });
 
     return res.status(201).json(invoice);
   } catch (error: any) {
-    console.error('Error creating invoice:', error);
+    logger.error({ error }, 'Error creating invoice');
     if (error.message.includes('Insufficient') || error.message.includes('not found')) {
       return res.status(400).json({ error: error.message });
     }
@@ -69,7 +69,7 @@ export const createInvoice = async (req: Request<{}, {}, CreateInvoiceInput>, re
   }
 };
 
-export const getInvoices = async (req: Request, res: Response) => {
+export const getInvoices = async (_req: Request, res: Response) => {
   try {
     const invoices = await prisma.invoice.findMany({
       include: {
