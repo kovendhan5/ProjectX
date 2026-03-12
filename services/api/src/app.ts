@@ -19,7 +19,9 @@ app.use(helmet());
 app.disable('x-powered-by');
 
 // CORS — allow only whitelisted origins in production
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3002,http://localhost:3004')
+const allowedOrigins = (
+  process.env.ALLOWED_ORIGINS || 'http://localhost:3002,http://localhost:3004'
+)
   .split(',')
   .map((o) => o.trim());
 

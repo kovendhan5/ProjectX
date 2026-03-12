@@ -10,21 +10,25 @@ const requiredServices = [
   {
     name: 'API Service',
     path: 'services/api/.env.example',
+    envPath: 'services/api/.env',
     vars: ['PORT', 'NODE_ENV', 'DATABASE_URL', 'BLOCKCHAIN_SERVICE_URL'],
   },
   {
     name: 'Blockchain Service',
     path: 'services/blockchain/.env.example',
+    envPath: 'services/blockchain/.env',
     vars: ['PORT', 'NODE_ENV'],
   },
   {
     name: 'Pharmacy Portal',
     path: 'clients/pharmacy-portal/.env.example',
+    envPath: 'clients/pharmacy-portal/.env.local',
     vars: ['NEXT_PUBLIC_API_URL'],
   },
   {
     name: 'Regulator Portal',
     path: 'clients/regulator-portal/.env.example',
+    envPath: 'clients/regulator-portal/.env.local',
     vars: ['NEXT_PUBLIC_API_URL', 'NEXT_PUBLIC_BLOCKCHAIN_URL'],
   },
 ];
@@ -49,6 +53,15 @@ try {
   hasErrors = true;
 }
 
+// Check Docker daemon
+try {
+  execSync('docker info', { stdio: 'pipe' });
+  console.log('✓ Docker daemon is running');
+} catch (error) {
+  console.error('✗ Docker daemon is not running. Start Docker Desktop');
+  hasErrors = true;
+}
+
 // Check Docker Compose
 try {
   execSync('docker-compose --version', { stdio: 'pipe' });
@@ -63,7 +76,7 @@ console.log('\n📋 Checking environment files...\n');
 // Check environment files
 requiredServices.forEach((service) => {
   const examplePath = path.join(process.cwd(), service.path);
-  const envPath = examplePath.replace('.example', '');
+  const envPath = path.join(process.cwd(), service.envPath || service.path.replace('.example', ''));
 
   if (!fs.existsSync(examplePath)) {
     console.error(`✗ ${service.name}: .env.example not found at ${service.path}`);
@@ -74,8 +87,8 @@ requiredServices.forEach((service) => {
   console.log(`✓ ${service.name}: .env.example exists`);
 
   if (!fs.existsSync(envPath)) {
-    console.warn(`⚠ ${service.name}: .env file not found. Copy from .env.example`);
-    console.log(`  Run: cp ${examplePath} ${envPath}`);
+    console.warn(`⚠ ${service.name}: environment file not found (${service.envPath || '.env'})`);
+    console.log(`  Create it from: ${examplePath}`);
   } else {
     const envContent = fs.readFileSync(envPath, 'utf8');
     const missingVars = service.vars.filter(
@@ -109,8 +122,16 @@ const workspaces = [
 ];
 
 workspaces.forEach((workspace) => {
+  const packageJsonPath = path.join(process.cwd(), workspace, 'package.json');
+  const rootModulesPath = path.join(process.cwd(), 'node_modules');
   const modulesPath = path.join(process.cwd(), workspace, 'node_modules');
-  if (!fs.existsSync(modulesPath)) {
+
+  if (!fs.existsSync(packageJsonPath)) {
+    console.warn(`⚠ ${workspace}: package.json not found`);
+    return;
+  }
+
+  if (!fs.existsSync(modulesPath) && !fs.existsSync(rootModulesPath)) {
     console.warn(`⚠ ${workspace}: dependencies not installed`);
   } else {
     console.log(`✓ ${workspace}: dependencies installed`);

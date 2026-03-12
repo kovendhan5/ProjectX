@@ -67,18 +67,18 @@ async function main() {
     data: {
       invoiceNumber: 'INV-2023-001',
       customerName: 'John Doe',
-      totalAmount: 150.50,
+      totalAmount: 150.5,
       items: {
         create: [
           {
             batchId: batch1.id,
             quantity: 10,
-            price: 10.00,
+            price: 10.0,
           },
           {
             batchId: batch3.id,
             quantity: 5,
-            price: 10.10,
+            price: 10.1,
           },
         ],
       },

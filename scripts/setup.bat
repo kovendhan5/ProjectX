@@ -1,5 +1,6 @@
 @echo off
 REM Environment Setup Script for Windows
+setlocal enabledelayedexpansion
 
 echo ========================================
 echo ProjectX Environment Setup
@@ -32,11 +33,28 @@ if not exist "clients\regulator-portal\.env.local" (
 echo.
 echo [2/5] Installing dependencies...
 call npm install
+if errorlevel 1 (
+    echo [ERROR] Dependency installation failed.
+    exit /b 1
+)
+
+echo.
+echo [2.5/5] Checking Docker daemon...
+docker info > nul 2>&1
+if errorlevel 1 (
+    echo [ERROR] Docker daemon is not running. Start Docker Desktop and retry.
+    exit /b 1
+)
 
 echo.
 echo [3/5] Starting PostgreSQL...
 cd infrastructure
 call docker-compose up -d postgres
+if errorlevel 1 (
+    echo [ERROR] Failed to start PostgreSQL container.
+    cd ..
+    exit /b 1
+)
 cd ..
 
 echo.
@@ -47,8 +65,23 @@ echo.
 echo [5/5] Running database migrations and seed...
 cd services\api
 call npx prisma migrate dev --name init
+if errorlevel 1 (
+    echo [ERROR] Prisma migration failed.
+    cd ..\..
+    exit /b 1
+)
 call npx prisma generate
+if errorlevel 1 (
+    echo [ERROR] Prisma client generation failed.
+    cd ..\..
+    exit /b 1
+)
 call npm run seed
+if errorlevel 1 (
+    echo [ERROR] Database seed failed.
+    cd ..\..
+    exit /b 1
+)
 cd ..\..
 
 echo.
