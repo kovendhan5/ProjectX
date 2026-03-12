@@ -8,28 +8,30 @@ datasource db {
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  sku         String   @unique
-  name        String
-  description String?
-  manufacturer String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  batches     Batch[]
+  id             String   @id @default(uuid())
+  sku            String   @unique
+  name           String
+  description    String?
+  manufacturer   String
+  blockchainTxId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  batches        Batch[]
 }
 
 model Batch {
-  id             String   @id @default(uuid())
-  batchNumber    String   @unique
-  productId      String
-  product        Product  @relation(fields: [productId], references: [id])
-  manufactureDate DateTime
-  expiryDate     DateTime
-  quantity       Int
-  status         BatchStatus @default(PRODUCED)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  invoiceItems   InvoiceItem[]
+  id              String      @id @default(uuid())
+  batchNumber     String      @unique
+  productId       String
+  product         Product     @relation(fields: [productId], references: [id])
+  manufactureDate DateTime    @default(now())
+  expiryDate      DateTime
+  quantity        Int
+  status          BatchStatus @default(PRODUCED)
+  blockchainTxId  String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  invoiceItems    InvoiceItem[]
 }
 
 enum BatchStatus {
@@ -42,12 +44,13 @@ enum BatchStatus {
 }
 
 model Invoice {
-  id            String        @id @default(uuid())
-  invoiceNumber String        @unique
-  customerName  String?
-  totalAmount   Float
-  createdAt     DateTime      @default(now())
-  items         InvoiceItem[]
+  id             String        @id @default(uuid())
+  invoiceNumber  String        @unique
+  customerName   String?
+  totalAmount    Float
+  blockchainTxId String?
+  createdAt      DateTime      @default(now())
+  items          InvoiceItem[]
 }
 
 model InvoiceItem {

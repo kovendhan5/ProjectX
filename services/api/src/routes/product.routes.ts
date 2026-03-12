@@ -1,15 +1,27 @@
 import { Router } from 'express';
-import { createBatch, createProduct, getProduct, getProducts } from '../controllers/product.controller';
+import {
+  createBatchForProduct,
+  createProduct,
+  getBatchByNumber,
+  getBatchesForProduct,
+  getProduct,
+  getProducts,
+} from '../controllers/product.controller';
 import { writeLimiter } from '../middleware/rateLimiter';
 import validate from '../middleware/validateResource';
-import { createBatchSchema, createProductSchema } from '../models/product.schema';
+import { createBatchForProductSchema, createProductSchema } from '../models/product.schema';
 
 const router = Router();
 
+// Product routes
 router.post('/products', writeLimiter, validate(createProductSchema), createProduct);
 router.get('/products', getProducts);
 router.get('/products/:sku', getProduct);
-router.post('/batches', writeLimiter, validate(createBatchSchema), createBatch);
+
+// Batch routes (by product SKU — preferred)
+router.post('/products/:sku/batches', writeLimiter, validate(createBatchForProductSchema), createBatchForProduct);
+router.get('/products/:sku/batches', getBatchesForProduct);
+router.get('/batches/:batchNumber', getBatchByNumber);
 
 export default router;
 

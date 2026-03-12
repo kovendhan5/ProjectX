@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Request, Response } from 'express';
 import prisma from '../config/db';
 import logger from '../config/logger';
@@ -8,36 +9,27 @@ export const createInvoice = async (req: Request<{}, {}, CreateInvoiceInput>, re
   try {
     const { customerName, items } = req.body;
 
-    // Calculate total
     const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const invoiceNumber = `INV-${Date.now()}`; // Simple ID generation
+    const invoiceNumber = `INV-${Date.now()}`;
+    const blockchainTxId = randomUUID();
 
-    // Database Transaction
     const invoice = await prisma.$transaction(async (tx: any) => {
-      // 1. Verify and Update Batches
       for (const item of items) {
         const batch = await tx.batch.findUnique({ where: { id: item.batchId } });
-
-        if (!batch) {
-          throw new Error(`Batch ${item.batchId} not found`);
-        }
-
-        if (batch.quantity < item.quantity) {
+        if (!batch) throw new Error(`Batch ${item.batchId} not found`);
+        if (batch.quantity < item.quantity)
           throw new Error(`Insufficient quantity for batch ${batch.batchNumber}`);
-        }
-
         await tx.batch.update({
           where: { id: item.batchId },
           data: { quantity: batch.quantity - item.quantity },
         });
       }
-
-      // 2. Create Invoice
       return tx.invoice.create({
         data: {
           invoiceNumber,
           customerName,
           totalAmount,
+          blockchainTxId,
           items: {
             create: items.map((item) => ({
               batchId: item.batchId,
@@ -50,9 +42,9 @@ export const createInvoice = async (req: Request<{}, {}, CreateInvoiceInput>, re
       });
     });
 
-    // 3. Anchor to Blockchain
-    await recordTransaction({
+    recordTransaction({
       type: 'INVOICE_GENERATION',
+      txId: blockchainTxId,
       invoiceId: invoice.id,
       invoiceNumber: invoice.invoiceNumber,
       totalAmount: invoice.totalAmount,
@@ -63,7 +55,7 @@ export const createInvoice = async (req: Request<{}, {}, CreateInvoiceInput>, re
     return res.status(201).json(invoice);
   } catch (error: any) {
     logger.error({ error }, 'Error creating invoice');
-    if (error.message.includes('Insufficient') || error.message.includes('not found')) {
+    if (error.message?.includes('Insufficient') || error.message?.includes('not found')) {
       return res.status(400).json({ error: error.message });
     }
     return res.status(500).json({ error: 'Internal Server Error' });
@@ -73,21 +65,12 @@ export const createInvoice = async (req: Request<{}, {}, CreateInvoiceInput>, re
 export const getInvoices = async (_req: Request, res: Response) => {
   try {
     const invoices = await prisma.invoice.findMany({
-      include: {
-        items: {
-          include: {
-            batch: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      include: { items: { include: { batch: true } } },
+      orderBy: { createdAt: 'desc' },
     });
-
     return res.json(invoices);
   } catch (error: any) {
-    console.error('Error fetching invoices:', error);
+    logger.error({ error }, 'Error fetching invoices');
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -95,29 +78,17 @@ export const getInvoices = async (_req: Request, res: Response) => {
 export const getInvoiceById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-
-    if (!id) {
-      return res.status(400).json({ error: 'Invalid invoice ID' });
-    }
+    if (!id) return res.status(400).json({ error: 'Invalid invoice ID' });
 
     const invoice = await prisma.invoice.findUnique({
       where: { id },
-      include: {
-        items: {
-          include: {
-            batch: true,
-          },
-        },
-      },
+      include: { items: { include: { batch: true } } },
     });
 
-    if (!invoice) {
-      return res.status(404).json({ error: 'Invoice not found' });
-    }
-
+    if (!invoice) return res.status(404).json({ error: 'Invoice not found' });
     return res.json(invoice);
   } catch (error: any) {
-    console.error('Error fetching invoice:', error);
+    logger.error({ error }, 'Error fetching invoice');
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };

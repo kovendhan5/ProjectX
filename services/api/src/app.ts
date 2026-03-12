@@ -7,6 +7,7 @@ import { getApiInfo, healthCheck } from './controllers/health.controller';
 import { authenticate, optionalAuthenticate, validateJwtSecurityConfig } from './middleware/auth';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { globalLimiter } from './middleware/rateLimiter';
+import authRoutes from './routes/auth.routes';
 import invoiceRoutes from './routes/invoice.routes';
 import productRoutes from './routes/product.routes';
 
@@ -59,7 +60,10 @@ const apiAuthMiddleware = authRequired ? authenticate : optionalAuthenticate;
 app.get('/', getApiInfo);
 app.get('/health', healthCheck);
 
-// Protected API Routes — JWT required
+// Auth routes — public (login issues the token)
+app.use('/api/v1/auth', authRoutes);
+
+// Protected API routes — JWT required in production, optional in dev
 app.use('/api/v1', apiAuthMiddleware, productRoutes);
 app.use('/api/v1', apiAuthMiddleware, invoiceRoutes);
 
