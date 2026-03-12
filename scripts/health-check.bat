@@ -5,8 +5,8 @@ echo Checking service health...
 echo.
 
 REM API Service
-echo [1/5] Checking API Service (http://localhost:3001/api/health)...
-curl -s -o nul -w "%%{http_code}" http://localhost:3001/api/health > temp.txt
+echo [1/5] Checking API Service (http://localhost:3001/health)...
+curl -s -o nul -w "%%{http_code}" http://localhost:3001/health > temp.txt
 set /p API_STATUS=<temp.txt
 del temp.txt
 

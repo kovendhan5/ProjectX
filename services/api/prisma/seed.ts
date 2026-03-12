@@ -12,7 +12,6 @@ async function main() {
       name: 'Paracetamol 500mg',
       manufacturer: 'PharmaCorp Ltd.',
       description: 'Pain relief and fever reducer',
-      blockchainTxId: 'tx_prod_001',
     },
   });
 
@@ -22,7 +21,6 @@ async function main() {
       name: 'Amoxicillin 250mg',
       manufacturer: 'MediLabs Inc.',
       description: 'Antibiotic for bacterial infections',
-      blockchainTxId: 'tx_prod_002',
     },
   });
 
@@ -33,10 +31,10 @@ async function main() {
     data: {
       batchNumber: 'B-2023-001',
       productId: product1.id,
+      manufactureDate: new Date('2024-01-01'),
       expiryDate: new Date('2025-12-31'),
       quantity: 500,
-      status: 'ACTIVE',
-      blockchainTxId: 'tx_batch_001',
+      status: 'PRODUCED',
     },
   });
 
@@ -44,10 +42,10 @@ async function main() {
     data: {
       batchNumber: 'B-2023-002',
       productId: product1.id,
+      manufactureDate: new Date('2024-02-01'),
       expiryDate: new Date('2026-06-30'),
       quantity: 300,
-      status: 'ACTIVE',
-      blockchainTxId: 'tx_batch_002',
+      status: 'PRODUCED',
     },
   });
 
@@ -55,10 +53,10 @@ async function main() {
     data: {
       batchNumber: 'B-2023-003',
       productId: product2.id,
+      manufactureDate: new Date('2024-03-01'),
       expiryDate: new Date('2025-09-15'),
       quantity: 200,
-      status: 'ACTIVE',
-      blockchainTxId: 'tx_batch_003',
+      status: 'PRODUCED',
     },
   });
 
@@ -70,7 +68,6 @@ async function main() {
       invoiceNumber: 'INV-2023-001',
       customerName: 'John Doe',
       totalAmount: 150.50,
-      blockchainTxId: 'tx_invoice_001',
       items: {
         create: [
           {

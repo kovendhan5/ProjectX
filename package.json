@@ -15,10 +15,10 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "validate": "node scripts/validate-env.js",
     "clean": "rm -rf node_modules && npm run clean --workspaces",
-    "dev:api": "npm run dev --workspace=@projectx/api",
-    "dev:blockchain": "npm run dev --workspace=@projectx/blockchain",
-    "dev:pharmacy": "npm run dev --workspace=@projectx/pharmacy-portal",
-    "dev:regulator": "npm run dev --workspace=@projectx/regulator-portal",
+    "dev:api": "npm run dev --workspace=@project-x/api",
+    "dev:blockchain": "npm run dev --workspace=@project-x/blockchain",
+    "dev:pharmacy": "npm run dev --workspace=@project-x/pharmacy-portal",
+    "dev:regulator": "npm run dev --workspace=@project-x/regulator-portal",
     "db:migrate": "cd services/api && npx prisma migrate dev",
     "db:seed": "cd services/api && npx prisma db seed",
     "db:reset": "cd services/api && npx prisma migrate reset --force",
@@ -27,9 +27,9 @@
     "docker:down": "docker-compose -f infrastructure/docker-compose.yml down",
     "docker:logs": "docker-compose -f infrastructure/docker-compose.yml logs -f",
     "docker:prod": "docker-compose -f infrastructure/docker-compose.prod.yml up -d",
-    "health": "bash scripts/health-check.sh",
-    "backup:db": "bash scripts/backup-db.sh",
-    "validate:env": "bash scripts/validate-env.sh"
+    "health": "scripts\\health-check.bat",
+    "backup:db": "scripts\\backup-db.bat",
+    "validate:env": "node scripts/validate-env.js"
   },
   "devDependencies": {
     "prettier": "^3.0.0",

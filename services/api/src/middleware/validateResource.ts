@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { AnyZodObject } from 'zod';
+import { AnyZodObject, ZodError } from 'zod';
 
 const validate = (schema: AnyZodObject) => (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -10,7 +10,17 @@ const validate = (schema: AnyZodObject) => (req: Request, res: Response, next: N
     });
     next();
   } catch (e: any) {
-    return res.status(400).send(e.errors);
+    if (e instanceof ZodError) {
+      return res.status(400).json({
+        error: 'Validation failed',
+        details: e.errors.map((issue) => ({
+          path: issue.path.join('.'),
+          message: issue.message,
+        })),
+      });
+    }
+
+    return res.status(400).json({ error: 'Invalid request payload' });
   }
 };
 
