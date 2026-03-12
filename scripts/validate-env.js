@@ -91,9 +91,7 @@ requiredServices.forEach((service) => {
     console.log(`  Create it from: ${examplePath}`);
   } else {
     const envContent = fs.readFileSync(envPath, 'utf8');
-    const missingVars = service.vars.filter(
-      (varName) => !envContent.includes(`${varName}=`)
-    );
+    const missingVars = service.vars.filter((varName) => !envContent.includes(`${varName}=`));
 
     if (missingVars.length > 0) {
       console.warn(`⚠ ${service.name}: Missing variables: ${missingVars.join(', ')}`);
@@ -146,7 +144,9 @@ if (hasErrors) {
 } else {
   console.log('\n✅ Environment validation successful!\n');
   console.log('Next steps:');
-  console.log('  1. Start PostgreSQL: docker-compose -f infrastructure/docker-compose.yml up -d postgres');
+  console.log(
+    '  1. Start PostgreSQL: docker-compose -f infrastructure/docker-compose.yml up -d postgres'
+  );
   console.log('  2. Run migrations: npm run db:migrate');
   console.log('  3. Seed database: npm run db:seed');
   console.log('  4. Start services: make dev\n');
