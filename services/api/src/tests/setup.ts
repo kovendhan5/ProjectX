@@ -2,7 +2,8 @@
 beforeAll(() => {
   // Set test environment variables
   process.env.NODE_ENV = 'test';
-  process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/projectx_test';
+  process.env.DATABASE_URL =
+    process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/projectx_test';
   // Disable auth requirement so integration tests work without tokens
   process.env.AUTH_REQUIRED = 'false';
   // Provide a deterministic JWT secret for tests
