@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject, ZodError } from 'zod';
 
-const validate = (schema: AnyZodObject) => (req: Request, res: Response, next: NextFunction) => {
+const validate = (schema: AnyZodObject) => (req: Request, res: Response, next: NextFunction): void => {
   try {
     schema.parse({
       body: req.body,
@@ -11,16 +11,17 @@ const validate = (schema: AnyZodObject) => (req: Request, res: Response, next: N
     next();
   } catch (e: any) {
     if (e instanceof ZodError) {
-      return res.status(400).json({
+      res.status(400).json({
         error: 'Validation failed',
         details: e.errors.map((issue) => ({
           path: issue.path.join('.'),
           message: issue.message,
         })),
       });
+      return;
     }
 
-    return res.status(400).json({ error: 'Invalid request payload' });
+    res.status(400).json({ error: 'Invalid request payload' });
   }
 };
 
