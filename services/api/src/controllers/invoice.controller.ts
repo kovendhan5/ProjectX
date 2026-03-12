@@ -55,7 +55,10 @@ export const createInvoice = async (req: Request<{}, {}, CreateInvoiceInput>, re
     return res.status(201).json(invoice);
   } catch (error: any) {
     logger.error({ error }, 'Error creating invoice');
-    if (error.message?.includes('Insufficient') || error.message?.includes('not found')) {
+    if (error.message?.includes('not found')) {
+      return res.status(404).json({ error: error.message });
+    }
+    if (error.message?.includes('Insufficient')) {
       return res.status(400).json({ error: error.message });
     }
     return res.status(500).json({ error: 'Internal Server Error' });

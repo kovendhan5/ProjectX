@@ -19,9 +19,13 @@ router.get('/products', getProducts);
 router.get('/products/:sku', getProduct);
 
 // Batch routes (by product SKU — preferred)
-router.post('/products/:sku/batches', writeLimiter, validate(createBatchForProductSchema), createBatchForProduct);
+router.post(
+  '/products/:sku/batches',
+  writeLimiter,
+  validate(createBatchForProductSchema),
+  createBatchForProduct
+);
 router.get('/products/:sku/batches', getBatchesForProduct);
 router.get('/batches/:batchNumber', getBatchByNumber);
 
 export default router;
-

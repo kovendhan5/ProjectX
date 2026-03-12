@@ -12,6 +12,7 @@ async function main() {
       name: 'Paracetamol 500mg',
       manufacturer: 'PharmaCorp Ltd.',
       description: 'Pain relief and fever reducer',
+      blockchainTxId: 'seed-tx-prod-001',
     },
   });
 
@@ -21,6 +22,7 @@ async function main() {
       name: 'Amoxicillin 250mg',
       manufacturer: 'MediLabs Inc.',
       description: 'Antibiotic for bacterial infections',
+      blockchainTxId: 'seed-tx-prod-002',
     },
   });
 
@@ -35,6 +37,7 @@ async function main() {
       expiryDate: new Date('2025-12-31'),
       quantity: 500,
       status: 'PRODUCED',
+      blockchainTxId: 'seed-tx-batch-001',
     },
   });
 
@@ -46,6 +49,7 @@ async function main() {
       expiryDate: new Date('2026-06-30'),
       quantity: 300,
       status: 'PRODUCED',
+      blockchainTxId: 'seed-tx-batch-002',
     },
   });
 
@@ -57,6 +61,7 @@ async function main() {
       expiryDate: new Date('2025-09-15'),
       quantity: 200,
       status: 'PRODUCED',
+      blockchainTxId: 'seed-tx-batch-003',
     },
   });
 
@@ -68,6 +73,7 @@ async function main() {
       invoiceNumber: 'INV-2023-001',
       customerName: 'John Doe',
       totalAmount: 150.5,
+      blockchainTxId: 'seed-tx-invoice-001',
       items: {
         create: [
           {

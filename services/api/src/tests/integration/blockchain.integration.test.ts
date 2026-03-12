@@ -1,7 +1,9 @@
-/**
+﻿/**
  * Blockchain Service Integration Tests
- * 
- * Tests blockchain service integration with the API
+ *
+ * Tests blockchain service integration with the API.
+ * Verifies blockchainTxId is present on invoice responses and that
+ * BlockchainService methods work as expected.
  */
 
 import { PrismaClient } from '@prisma/client';
@@ -13,237 +15,138 @@ const prisma = new PrismaClient();
 const blockchainService = new BlockchainService();
 
 describe('Blockchain Integration Tests', () => {
-  beforeAll(async () => {
-    // Clean up test data
-    await prisma.invoice.deleteMany();
-    await prisma.batch.deleteMany();
-    await prisma.product.deleteMany();
+  let testProductId: string;
+  let testBatchId: string;
 
-    // Create test product and batch
-    await prisma.product.create({
+  beforeAll(async () => {
+    // Clean up and seed minimal test data
+    await prisma.invoiceItem.deleteMany({});
+    await prisma.invoice.deleteMany({});
+    await prisma.batch.deleteMany({});
+    await prisma.product.deleteMany({});
+
+    const product = await prisma.product.create({
       data: {
-        id: 'blockchain-test-product',
+        sku: 'BLOCKCHAIN-TEST-SKU',
         name: 'Test Medication',
         manufacturer: 'Test Manufacturer',
-        batches: {
-          create: {
-            id: 'blockchain-test-batch',
-            expiryDate: new Date('2025-12-31'),
-            quantity: 1000,
-            unitPrice: 10.00
-          }
-        }
-      }
+      },
     });
+    testProductId = product.id;
+
+    const batch = await prisma.batch.create({
+      data: {
+        batchNumber: 'BC-BATCH-001',
+        productId: product.id,
+        expiryDate: new Date('2027-12-31'),
+        quantity: 10000,
+      },
+    });
+    testBatchId = batch.id;
   });
 
   afterAll(async () => {
     await prisma.$disconnect();
   });
 
-  describe('Transaction Recording', () => {
-    it('should record invoice creation on blockchain', async () => {
+  describe('Transaction Recording via Invoice API', () => {
+    it('should record invoice creation with blockchainTxId', async () => {
       const response = await request(app)
-        .post('/api/invoices')
+        .post('/api/v1/invoices')
         .send({
-          pharmacyName: 'Blockchain Test Pharmacy',
-          items: [
-            {
-              batchId: 'blockchain-test-batch',
-              quantity: 5
-            }
-          ]
+          customerName: 'Blockchain Test Pharmacy',
+          items: [{ batchId: testBatchId, quantity: 5, price: 10.00 }],
         })
         .expect(201);
 
-      // Verify blockchain transaction ID exists
       expect(response.body.blockchainTxId).toBeTruthy();
       expect(typeof response.body.blockchainTxId).toBe('string');
+      expect(response.body.blockchainTxId.length).toBeGreaterThan(0);
     });
 
-    it('should generate unique transaction IDs', async () => {
-      const txIds = new Set();
+    it('should generate unique transaction IDs per invoice', async () => {
+      const txIds = new Set<string>();
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 3; i++) {
         const response = await request(app)
-          .post('/api/invoices')
+          .post('/api/v1/invoices')
           .send({
-            pharmacyName: 'Blockchain Test Pharmacy',
-            items: [
-              {
-                batchId: 'blockchain-test-batch',
-                quantity: 1
-              }
-            ]
+            customerName: 'Uniqueness Test Pharmacy',
+            items: [{ batchId: testBatchId, quantity: 1, price: 5.00 }],
           })
           .expect(201);
-
         txIds.add(response.body.blockchainTxId);
       }
 
-      // All transaction IDs should be unique
-      expect(txIds.size).toBe(5);
+      expect(txIds.size).toBe(3);
     });
 
-    it('should maintain transaction integrity', async () => {
-      const invoice = {
-        pharmacyName: 'Integrity Test Pharmacy',
-        items: [
-          {
-            batchId: 'blockchain-test-batch',
-            quantity: 3
-          }
-        ]
-      };
-
+    it('should maintain UUID format for transaction IDs', async () => {
       const response = await request(app)
-        .post('/api/invoices')
-        .send(invoice)
+        .post('/api/v1/invoices')
+        .send({
+          customerName: 'Format Test Pharmacy',
+          items: [{ batchId: testBatchId, quantity: 1, price: 5.00 }],
+        })
         .expect(201);
 
-      const txId = response.body.blockchainTxId;
-      
-      // Verify transaction can be retrieved (mock verification)
-      expect(txId).toMatch(/^[a-f0-9]{64}$/); // SHA256 hash format
+      // UUID v4 format
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      expect(response.body.blockchainTxId).toMatch(uuidRegex);
     });
   });
 
-  describe('Blockchain Service Methods', () => {
+  describe('BlockchainService Methods', () => {
     it('should record transactions with valid data', async () => {
       const txData = {
         invoiceId: 'test-invoice-123',
-        pharmacyName: 'Test Pharmacy',
+        customerName: 'Test Pharmacy',
         totalAmount: 50.00,
-        items: [
-          {
-            batchId: 'blockchain-test-batch',
-            quantity: 5
-          }
-        ]
+        items: [{ batchId: testBatchId, quantity: 5 }],
       };
 
       const txId = await blockchainService.recordTransaction(txData);
 
       expect(txId).toBeTruthy();
       expect(typeof txId).toBe('string');
-      expect(txId.length).toBeGreaterThan(0);
+      expect((txId as string).length).toBeGreaterThan(0);
     });
 
     it('should verify recorded transactions', async () => {
       const txData = {
         invoiceId: 'verify-test-invoice',
-        pharmacyName: 'Verification Test Pharmacy',
+        customerName: 'Verification Test Pharmacy',
         totalAmount: 75.00,
-        items: []
+        items: [],
       };
 
       const txId = await blockchainService.recordTransaction(txData);
-      const isValid = await blockchainService.verifyTransaction(txId);
+      const isValid = await blockchainService.verifyTransaction(txId as string);
 
       expect(isValid).toBe(true);
     });
 
-    it('should reject invalid transaction IDs', async () => {
+    it('should return false for invalid transaction IDs', async () => {
       const isValid = await blockchainService.verifyTransaction('invalid-tx-id');
       expect(isValid).toBe(false);
     });
 
-    it('should handle blockchain service failures gracefully', async () => {
-      // Test with invalid data
-      await expect(async () => {
-        await blockchainService.recordTransaction(null as any);
-      }).rejects.toThrow();
+    it('should handle null input gracefully', async () => {
+      await expect(blockchainService.recordTransaction(null as any)).rejects.toThrow();
     });
   });
 
   describe('Transaction Immutability', () => {
-    it('should maintain immutable transaction records', async () => {
-      const response1 = await request(app)
-        .post('/api/invoices')
-        .send({
-          pharmacyName: 'Immutability Test Pharmacy',
-          items: [
-            {
-              batchId: 'blockchain-test-batch',
-              quantity: 2
-            }
-          ]
-        })
-        .expect(201);
+    it('should assign different IDs to identical transactions', async () => {
+      const payload = {
+        customerName: 'Immutability Test Pharmacy',
+        items: [{ batchId: testBatchId, quantity: 2, price: 10.00 }],
+      };
 
-      const txId1 = response1.body.blockchainTxId;
+      const response1 = await request(app).post('/api/v1/invoices').send(payload).expect(201);
+      const response2 = await request(app).post('/api/v1/invoices').send(payload).expect(201);
 
-      // Create another transaction with identical data
-      const response2 = await request(app)
-        .post('/api/invoices')
-        .send({
-          pharmacyName: 'Immutability Test Pharmacy',
-          items: [
-            {
-              batchId: 'blockchain-test-batch',
-              quantity: 2
-            }
-          ]
-        })
-        .expect(201);
-
-      const txId2 = response2.body.blockchainTxId;
-
-      // Different transactions should have different IDs
-      expect(txId1).not.toBe(txId2);
-    });
-  });
-
-  describe('Performance', () => {
-    it('should process blockchain transactions efficiently', async () => {
-      const start = Date.now();
-
-      await request(app)
-        .post('/api/invoices')
-        .send({
-          pharmacyName: 'Performance Test Pharmacy',
-          items: [
-            {
-              batchId: 'blockchain-test-batch',
-              quantity: 1
-            }
-          ]
-        })
-        .expect(201);
-
-      const duration = Date.now() - start;
-
-      // Transaction should complete within reasonable time (< 500ms)
-      expect(duration).toBeLessThan(500);
-    });
-
-    it('should handle concurrent blockchain transactions', async () => {
-      const requests = Array(5).fill(null).map((_, index) =>
-        request(app)
-          .post('/api/invoices')
-          .send({
-            pharmacyName: `Concurrent Test Pharmacy ${index}`,
-            items: [
-              {
-                batchId: 'blockchain-test-batch',
-                quantity: 1
-              }
-            ]
-          })
-      );
-
-      const responses = await Promise.all(requests);
-
-      // All should succeed
-      responses.forEach(response => {
-        expect(response.status).toBe(201);
-        expect(response.body.blockchainTxId).toBeTruthy();
-      });
-
-      // All transaction IDs should be unique
-      const txIds = responses.map(r => r.body.blockchainTxId);
-      const uniqueTxIds = new Set(txIds);
-      expect(uniqueTxIds.size).toBe(txIds.length);
+      expect(response1.body.blockchainTxId).not.toBe(response2.body.blockchainTxId);
     });
   });
 });

@@ -10,6 +10,10 @@ services:
       - PORT=3000
       - NODE_ENV=development
       - DATABASE_URL=postgres://user:password@postgres:5432/projectx
+      - BLOCKCHAIN_SERVICE_URL=http://blockchain:3003
+      - AUTH_REQUIRED=false
+      - JWT_SECRET=${JWT_SECRET:-change-me-in-production-use-a-long-random-secret}
+      - ALLOWED_ORIGINS=http://localhost:3002,http://localhost:3004
     depends_on:
       postgres:
         condition: service_healthy

@@ -51,4 +51,3 @@ export class BlockchainService {
     return result?.valid === true;
   }
 }
-
